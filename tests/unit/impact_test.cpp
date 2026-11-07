@@ -36,6 +36,7 @@ constexpr int TELEMETRY_TICKS = 120;
  */
 constexpr int EVENTS_PER_HULL = settings::Collisions::Impacts::EVENTS_PER_BODY;
 
+
 /**
  * Abort the current test when the condition is false.
  *
@@ -46,6 +47,7 @@ void require(bool condition, const char* message) {
     if (!condition)
         throw std::runtime_error(message);
 }
+
 
 /**
  * Flattened index into the backend impact buffer for the event-th impact on
@@ -61,6 +63,7 @@ std::size_t impactIndex(int body, int hull, int event) {
     return static_cast<std::size_t>((body * HULLS_PER_BODY + hull) * EVENTS_PER_HULL + event);
 }
 
+
 /**
  * Per-body peak impact energies gathered across the severity ladder.
  */
@@ -68,6 +71,7 @@ struct SeverityResult {
     std::array<float, SEVERITY_BODIES> peaks{};
     bool anyImpact = false;
 };
+
 
 /**
  * Advance two identical scenes in lockstep - one tracking impacts, one
@@ -170,6 +174,7 @@ void verifyHistoryRetentionAndFade(const sim::State& tracked, render::ImpactHist
     require(history.lastEnergy_J == 0.f, "Reset retains stale impact");
 }
 
+
 /**
  * Drive a fast sphere at x = 6.64 into the glass wall at x = 7. The strike
  * must register on wall face 1, with the mark lying exactly on the wall plane.
@@ -197,6 +202,7 @@ void verifyWallImpactMark(bool cuda, const World& world) {
     require(hit.wallFace_i == 1 && hit.energy_J > 0.f, "Missing glass wall impact");
     require(std::abs(hit.wallPoint_m.x - 7.f) < 0.0001f, "Wall mark not on wall plane");
 }
+
 
 /**
  * Confirm a sphere resting on the floor under normal gravity produces contact
@@ -231,6 +237,7 @@ void verifyRestingContactIsFiltered(bool cuda, const World& world) {
         }
     }
 }
+
 
 /**
  * Run the full impact telemetry suite on one backend.
@@ -279,6 +286,7 @@ std::array<float, SEVERITY_BODIES> run(bool cuda) {
 }
 
 } // namespace (anonymous)
+
 
 /**
  * Entry point: run the CPU suite, compare against CUDA when available, and

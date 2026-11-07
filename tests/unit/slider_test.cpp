@@ -76,6 +76,7 @@ Track frame(float& value) {
     return track;
 }
 
+
 /**
  * Abort the current test when the condition is false.
  *
@@ -86,6 +87,7 @@ void require(bool condition, const char* message) {
     if (!condition)
         throw std::runtime_error(message);
 }
+
 
 /**
  * Ctrl-click the middle of the slider, select all, type a replacement value
@@ -101,21 +103,26 @@ void typeValue(float& value, const Track& track, const char* text) {
     io.AddMousePosEvent((track.left + track.right) / 2, track.y);
     io.AddMouseButtonEvent(0, true);
     frame(value);
+
     require(ImGui::TempInputIsActive(track.id), "Ctrl-click must open native numeric editing");
     io.AddMouseButtonEvent(0, false);
     io.AddKeyEvent(ImGuiKey_A, true);
     frame(value);
+
     io.AddKeyEvent(ImGuiKey_A, false);
     io.AddKeyEvent(ImGuiMod_Ctrl, false);
     io.AddInputCharactersUTF8(text);
     frame(value);
+
     io.AddKeyEvent(ImGuiKey_Enter, true);
     frame(value);
+
     io.AddKeyEvent(ImGuiKey_Enter, false);
     frame(value);
 }
 
 } // namespace (anonymous)
+
 
 /**
  * Entry point: build a headless ImGui context, drive the slider through

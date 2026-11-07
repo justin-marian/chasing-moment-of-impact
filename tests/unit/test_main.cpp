@@ -182,6 +182,7 @@ void test_collision__ray_triangle_and_triangle_sat() {
     require(!triangleTriangle(a, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}), "degenerate triangle");
 }
 
+
 /**
  * Verify all ten ordered shape pairings produce symmetric contacts and that
  * randomized contacts stay finite and shallow.
@@ -230,6 +231,7 @@ void test_collision__all_ten_pair_types_and_symmetry() {
     }
 }
 
+
 /**
  * Verify gravity integrates to the analytic semi-implicit position, that
  * friction slows a sliding box, and that the Coulomb impulse stays within
@@ -271,6 +273,7 @@ void test_forces__gravity_and_coulomb_friction() {
     near(length(ct.tangentImpulse_Ns), c.frictionDynamic_unitless * ct.normalImpulse_Ns, COULOMB_TOLERANCE, "dynamic coefficient");
 }
 
+
 /**
  * Verify spawning across all four shapes is deterministic, stays inside the
  * box at the requested initial speed, and produces an unbiased initial
@@ -302,6 +305,7 @@ void test_spawn__all_shapes_uniform_deterministic_and_inside() {
     require(length(positions) / Real(a.count_i) < POSITION_BIAS_TOLERANCE, "position distribution biased");
 }
 
+
 /**
  * Verify that matrix scenarios A, B and C load with the same combined
  * cylinder and cone counts the generator produces, and that spawning from
@@ -326,6 +330,7 @@ void test_matrix__a_b_c_counts_exact() {
         require(counts == expected.counts, "spawn counts");
     }
 }
+
 
 /**
  * Verify that all six walls register contacts for every shape and that the
@@ -363,6 +368,7 @@ void test_box__all_walls_collide_and_near_wall_visibility() {
         }
 }
 
+
 /**
  * Verify sphere/sphere and sphere/wall CCD at high speed. OBB sweeps are not
  * covered by this test; that limitation is documented separately.
@@ -387,6 +393,7 @@ void test_ccd__high_speed_spheres_and_walls() {
     backend->step(s, c);
     require(staysInside(s, c, CCD_ESCAPE_TOLERANCE), "high speed wall escape");
 }
+
 
 /**
  * Verify a resting body falls asleep and that a moving impact wakes it.
@@ -443,6 +450,7 @@ void test_step__no_heap_allocation_and_determinism() {
     require(after == before, "CPU hot step allocated");
     require(hashState(a) == hashState(b), "CPU deterministic replay hash");
 }
+
 
 /**
  * Verify that UI actions (spawn, checkpoint, reset) reuse the same
@@ -508,8 +516,10 @@ void test_energy_momentum__100000_ticks() {
     std::cout << "  maximum relative energy drift=" << worst << '\n';
 }
 
+
 /**
- * Verify that an aligned four-box stack settles without drift, NaN, or escape over a million actual ticks.
+ * Verify that an aligned four-box stack settles without 
+ * drift, NaN, or escape over a million actual ticks.
  */
 void test_stack__four_boxes_1000000_ticks() {
     constexpr int STACK_HEIGHT = 4;
@@ -552,6 +562,7 @@ void test_stack__four_boxes_1000000_ticks() {
     require(length(s.velocity_mps[top]) < STACK_REST_VELOCITY, "rest stack velocity");
     std::cout << "  top-box displacement_m=" << s.position_m[top].y - initialY << '\n';
 }
+
 
 /**
  * Verify CPU/CUDA parity across five seeds with gravity and contacts active,
@@ -601,12 +612,10 @@ void test_cuda__parity_five_seeds() {
     require(maxPosition <= MAX_POSITION_ERROR && maxVelocity <= MAX_VELOCITY_ERROR, "CPU CUDA parity exceeded master tolerance");
 }
 
+
 /**
  * Verify that matrix scenarios run headless on the GPU, that results are
- * deterministic across two independent runs, and that bodies stay inside the
- * box.
- *
- * Traces CRS-R11/12/13/14; L-H13/14.
+ * deterministic across two independent runs, and that bodies stay inside the box.
  */
 void test_cuda__matrix_runs_and_determinism() {
     constexpr int MATRIX_TICKS = 120;

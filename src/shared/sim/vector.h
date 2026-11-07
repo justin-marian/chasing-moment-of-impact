@@ -3,7 +3,7 @@
  * Core mathematical primitives and unit wrappers for the physics simulation.
  *
  * Provides a minimal, standard-layout three-component vector and scalar math
- * helpers tailored for high-performance structure-of-arrays (SoA) memory
+ * helpers tailored for high-performance structure-of-arrays (SOA) (SoA) memory
  * layouts. Includes explicit dimensional wrappers (metres, seconds, kilograms,
  * metres-per-second) to enforce unit safety at compile time.
  *
@@ -50,7 +50,7 @@ SIM_HD inline Real clamp(Real a, Real lo, Real hi) { return maximum(lo, minimum(
  * Three-component vector shared by host and CUDA code.
  *
  * Operators intentionally stay minimal so the type remains standard-layout and
- * inexpensive to pass through structure-of-arrays simulation buffers.
+ * inexpensive to pass through structure-of-arrays (SOA) simulation buffers.
  */
 struct Vec3 {
     Real x{}, y{}, z{};

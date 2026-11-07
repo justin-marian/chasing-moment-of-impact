@@ -103,10 +103,9 @@ SIM_HD inline int colorContacts(
         }
     }
 
-    // Prefix sums so each color group gets a contiguous range in the
-    // output array. The counters are then reset to zero to act as write cursors.
+    // Prefix sums so each color group gets a contiguous range in the output array. 
+    // The counters are then reset to zero to act as write cursors.
     offsets[0] = 0;
-    
     for (int color = 0; color < colorCount; ++color) {
         offsets[color + 1] = offsets[color] + counts[color];
         counts[color] = 0;
@@ -117,7 +116,6 @@ SIM_HD inline int colorContacts(
         for (int slot = 0; slot < contactCounts[i]; ++slot) {
             int index = i * settings::Collisions::Storage::MAX_CONTACTS + slot;
             int color = colors[index];
-            
             indices[offsets[color] + counts[color]++] = index;
         }
     }

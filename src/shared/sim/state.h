@@ -4,7 +4,7 @@
  *
  * This header defines the core memory backbone for the physics simulation.
  * To maximize cache coherency and enable efficient GPU kernel execution, data
- * is stored in a Structure-of-Arrays (SoA) layout rather than an Array-of-Structs.
+ * is stored in a structure-of-arrays (SOA) (SoA) layout rather than an Array-of-Structs.
  *
  * The architecture splits ownership:
  * - The owning State allocates all buffers once on the host.
@@ -95,7 +95,7 @@ struct Body {
 
 
 /**
- * Non-owning host/device view of the simulation structure-of-arrays storage.
+ * Non-owning host/device view of the simulation structure-of-arrays (SOA) storage.
  *
  * Every pointer addresses the same body index range. The view owns no memory
  * and remains valid only while the corresponding state buffers remain
@@ -128,7 +128,7 @@ static_assert(offsetof(StateView, count_i) == 0);
 /**
  * Owning fixed-capacity host representation of rigid-body simulation state.
  *
- * Storage uses the same structure-of-arrays organization exposed through the
+ * Storage uses the same structure-of-arrays (SOA) organization exposed through the
  * view so CPU and CUDA implementations operate on the same logical schema.
  * Capacity is fixed when constructed and vectors are never grown during
  * normal simulation, keeping body indices and host/device copies stable.

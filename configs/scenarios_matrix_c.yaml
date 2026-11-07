@@ -1,15 +1,26 @@
+# Scenario Matrix C: Heavy load for stress testing and performance limits.
+
+# Identification
 id: C
+seed: 42 # Matches Matrix A and B for controlled comparison.
+
+# Shape counts (total: 4000 bodies)
 spheres_i: 500
 cubes_i: 1000
 cylinders_i: 1250
 cones_i: 1250
-seed: 42
+
+# Geometry and world bounds
 radius_m: 0.35
 boxHalfExtentX_m: 20
 boxHalfExtentY_m: 15
 boxHalfExtentZ_m: 20
-dt_s: 0.008333333333333333
+
+# Physics and timing
+dt_s: 0.008333333333333333 # 120 Hz fixed time step.
 gravity_mps2: 9.81
 maxInitialSpeed_mps: 5
+
+# Broad-phase and CCD
 cellSize_m: 1.6
 enableCcd: true

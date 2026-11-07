@@ -1,15 +1,26 @@
+# Scenario Matrix B: Medium load for standard regression and parity tests.
+
+# Identification
 id: B
+seed: 42 # Matches Matrix A for controlled comparison.
+
+# Shape counts (total: 1750 bodies)
 spheres_i: 250
 cubes_i: 500
 cylinders_i: 500
 cones_i: 500
-seed: 42
+
+# Geometry and world bounds
 radius_m: 0.35
 boxHalfExtentX_m: 20
 boxHalfExtentY_m: 15
 boxHalfExtentZ_m: 20
-dt_s: 0.008333333333333333
+
+# Physics and timing
+dt_s: 0.008333333333333333 # 120 Hz fixed time step.
 gravity_mps2: 9.81
 maxInitialSpeed_mps: 5
+
+# Broad-phase and CCD
 cellSize_m: 1.6
 enableCcd: true

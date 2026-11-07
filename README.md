@@ -120,17 +120,19 @@ The November 7, 2026 verification advanced each matrix for 720 ticks on both bac
 | Hardware | Intel Core i9-14900HX · NVIDIA GeForce RTX 4070 Laptop GPU |
 | Toolchain | Windows x64 · MSVC 19.51 · CUDA Toolkit 13.4.92 · SM 89 |
 
-These results describe the recorded runs. The longer stack stability check is a separate test in the suite.
+The performance reruns reproduced all 720 matching hashes per matrix and reported zero escaped ticks on both backends. The longer stack stability check is a separate test in the suite.
 
 ### Performance
 
 | Scenario | CPU median / p95 (ms/tick) | CUDA median / p95 (ms/tick) | Contact samples (CPU / CUDA) |
 | --- | --- | --- | --- |
-| Matrix A | pending | pending | pending |
-| Matrix B | pending | pending | pending |
-| Matrix C | pending | pending | pending |
+| Matrix A | 6.648 / 7.940 | 5.201 / 5.790 | 3,153,888 / 3,153,888 |
+| Matrix B | 12.794 / 16.940 | 9.240 / 11.207 | 5,966,806 / 5,966,806 |
+| Matrix C | 31.652 / 43.608 | 19.863 / 25.308 | 12,165,191 / 12,165,191 |
 
-Use the same tick window on both backends and report the median and 95th percentile of `total_wall_ms` from `frames.csv`. The median describes a typical tick; p95 shows how long the slower ticks take. Sum `contacts_i` over the window for contact samples. A persistent contact can contribute once per tick, so that sum does not count unique collisions. Record the hardware, toolchain, and source fingerprint alongside measured timings.
+The timings are from a fresh run on 2026-11-07 (UTC) using the Windows setup above and NVIDIA driver 617.42. Each row covers all 720 ticks per backend, including the first tick. The median and p95 use `total_wall_ms` from `frames.csv`, with linear interpolation for p95. Contact samples sum `contacts_i` over the same ticks. A contact that persists across several ticks can contribute more than once.
+
+Build source fingerprint: `e4dc65fdf3242edb3bd5cc6d945e3c2cfeaba4016a1a1dd6463dd9f0fd56086f`.
 
 See the [simulation gallery](#simulation-gallery) for side-by-side recordings of all three matrices.
 

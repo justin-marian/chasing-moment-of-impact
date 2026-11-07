@@ -1,0 +1,18 @@
+{
+  "backend": "cuda",
+  "bodyCount_i": 120,
+  "compiler": "MSVC 1951",
+  "configHash": "dd9c0b0d38b9a66f",
+  "cpuLogicalCores_i": 31,
+  "cpuModel": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "endUtc": "2026-11-07T12:47:08Z",
+  "os": "Windows",
+  "ramBytes_i": 33957076992,
+  "realBytes_i": 4,
+  "replayHash": "7951617106480340543",
+  "seed": 42,
+  "sourceSha256": "70d55cc9918421350062aa51f232ff81a18e837484c44e86287548811954573b",
+  "startUtc": "2026-11-07T12:47:07Z",
+  "ticks_i": 1200
+}

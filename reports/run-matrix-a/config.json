@@ -1,0 +1,34 @@
+{
+  "angularDamping_per_s": 0.05000000074505806,
+  "boxHalfExtents_m": [
+    20.0,
+    15.0,
+    20.0
+  ],
+  "cellSize_m": 1.600000023841858,
+  "contactSlop_m": 0.0010000000474974513,
+  "counts": [
+    100,
+    250,
+    250,
+    250
+  ],
+  "dt_s": 0.008333333767950535,
+  "enableCcd": true,
+  "enableSleep": true,
+  "frictionDynamic_unitless": 0.4000000059604645,
+  "frictionStatic_unitless": 0.5,
+  "gravity_mps2": 9.8100004196167,
+  "id": "A",
+  "linearDamping_per_s": 0.009999999776482582,
+  "maxInitialSpeed_mps": 5.0,
+  "positionCorrection_unitless": 0.6000000238418579,
+  "radius_m": 0.3499999940395355,
+  "restitutionSlop_mps": 0.009999999776482582,
+  "restitution_unitless": 0.44999998807907104,
+  "seed": 42,
+  "sleepAngVel_rad_s": 0.05000000074505806,
+  "sleepLinVel_mps": 0.05000000074505806,
+  "sleepTicks_i": 60,
+  "solverIterations_i": 10
+}

@@ -1,0 +1,62 @@
+{
+  "1": {
+    "cpu": {
+      "ticks": 2400,
+      "mean_contacts": 695.33,
+      "contact_ticks": 2383,
+      "median_ms": 0.9326,
+      "p95_ms": 1.1917,
+      "max_wall_projection_m": 0.127752304077,
+      "final_hash": "10022303660189552608"
+    },
+    "cuda": {
+      "ticks": 2400,
+      "mean_contacts": 695.33,
+      "contact_ticks": 2383,
+      "median_ms": 1.047,
+      "p95_ms": 1.2006,
+      "max_wall_projection_m": 0.127752304077,
+      "final_hash": "10022303660189552608"
+    }
+  },
+  "7": {
+    "cpu": {
+      "ticks": 2400,
+      "mean_contacts": 670.84,
+      "contact_ticks": 2394,
+      "median_ms": 0.9686,
+      "p95_ms": 1.2322,
+      "max_wall_projection_m": 0.101273536682,
+      "final_hash": "14821830133747829077"
+    },
+    "cuda": {
+      "ticks": 2400,
+      "mean_contacts": 670.84,
+      "contact_ticks": 2394,
+      "median_ms": 0.9506,
+      "p95_ms": 1.0944,
+      "max_wall_projection_m": 0.101273536682,
+      "final_hash": "14821830133747829077"
+    }
+  },
+  "2026": {
+    "cpu": {
+      "ticks": 2400,
+      "mean_contacts": 682.25,
+      "contact_ticks": 2383,
+      "median_ms": 0.9335,
+      "p95_ms": 1.1521,
+      "max_wall_projection_m": 0.0660381317139,
+      "final_hash": "5164778246187967505"
+    },
+    "cuda": {
+      "ticks": 2400,
+      "mean_contacts": 682.25,
+      "contact_ticks": 2383,
+      "median_ms": 1.0237,
+      "p95_ms": 1.1544,
+      "max_wall_projection_m": 0.0660381317139,
+      "final_hash": "5164778246187967505"
+    }
+  }
+}

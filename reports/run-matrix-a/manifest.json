@@ -1,0 +1,18 @@
+{
+  "backend": "Processor Intel(R) Core(TM) i9-14900HX, 2200 Mhz",
+  "bodyCount_i": 850,
+  "compiler": "MSVC 1951",
+  "configHash": "5106bfdafad6368b",
+  "cpuLogicalCores_i": 31,
+  "cpuModel": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "device": "single-threaded CPU",
+  "endUtc": "2026-11-07T12:55:06Z",
+  "os": "Windows",
+  "ramBytes_i": 33957076992,
+  "realBytes_i": 4,
+  "replayHash": "5327840572052581381",
+  "seed": 42,
+  "sourceSha256": "a093d9fe409aafe4c712cb632f9f0865ddacf63b0d42d9faf8935a52ff8de4e9",
+  "startUtc": "2026-11-07T12:55:06Z",
+  "ticks_i": 3
+}

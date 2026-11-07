@@ -1,0 +1,20 @@
+{
+  "cpu": {
+    "ticks": 2400,
+    "mean_contacts": 674.34,
+    "contact_ticks": 2391,
+    "median_ms": 0.9452,
+    "p95_ms": 1.2364,
+    "max_wall_projection_m": 0.0768852233887,
+    "final_hash": "15956118138859661966"
+  },
+  "cuda": {
+    "ticks": 2400,
+    "mean_contacts": 674.34,
+    "contact_ticks": 2391,
+    "median_ms": 1.0323,
+    "p95_ms": 1.2332,
+    "max_wall_projection_m": 0.0768852233887,
+    "final_hash": "15956118138859661966"
+  }
+}

@@ -68,3 +68,4 @@ vgcore.*
 
 # Ignore all compiled exports and build artifacts
 /exports/
+!/exports/.gitkeep

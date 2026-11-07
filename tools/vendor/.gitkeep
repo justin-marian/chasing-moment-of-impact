@@ -1,0 +1,11 @@
+# Vendor Directory Placeholder
+#
+# Purpose:
+# This file ensures the `vendor/` directory is tracked by Git even when empty.
+#
+# Contents:
+# Third-party dependencies live here: glad, glfw, glm, imgui, and json.
+#
+# Setup:
+# Before building the project, clone the respective upstream repositories 
+# or extract their release archives directly into this folder.

@@ -4,13 +4,17 @@ bin/
 __stages__/
 /tools/vendor/*
 !/tools/vendor/.gitkeep
+
 # Intermediate capture frames
 /media/frames/
 /media/matrices/frames/
+
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+compile_commands.json
+
 *.o
 *.obj
 *.a
@@ -35,6 +39,18 @@ generated/
 tmp/
 tmp/build/windows/
 tmp/build/linux/
+logs/*.log
+*.log
+
+# Python generated files
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+.pytest_cache/
 
 .vscode/
 .idea/
@@ -43,27 +59,12 @@ tmp/build/linux/
 *.swo
 *.sublime-workspace
 *.sublime-project
-compile_commands.json
-
 .DS_Store
 Thumbs.db
 desktop.ini
 
-
-*.log
 core
 vgcore.*
 
-# Publish only the Windows executables and runtime DLLs from the build output.
-/exports/*
-!/exports/builds/
-/exports/builds/*
-!/exports/builds/windows-x64/
-/exports/builds/windows-x64/*
-!/exports/builds/windows-x64/*.exe
-!/exports/builds/windows-x64/*.dll
-
-exports/
-tmp/
-logs/*.log
-__stages__/
+# Ignore all compiled exports and build artifacts
+/exports/

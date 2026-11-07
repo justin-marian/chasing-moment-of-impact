@@ -18,5 +18,5 @@ if(BUILD_VIEWER)
 	include(infra/Viewer.cmake)
 endif()
 
-include(infra/Executables.cmake)
+include(infra/Executable.cmake)
 include(infra/Tests.cmake)

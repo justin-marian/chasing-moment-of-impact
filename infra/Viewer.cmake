@@ -1,11 +1,3 @@
-# Prefer vendored copies under tools/vendor/<name>.
-foreach(dep glfw glm glad imgui)
-	string(TOUPPER "${dep}" upper)
-	if(EXISTS "${CMAKE_SOURCE_DIR}/tools/vendor/${dep}")
-		set(FETCHCONTENT_SOURCE_DIR_${upper} "${CMAKE_SOURCE_DIR}/tools/vendor/${dep}")
-	endif()
-endforeach()
-
 # Keep the fetched dependencies lean: no docs, no tests, no examples.
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL   "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL   "" FORCE)
@@ -17,32 +9,28 @@ set(GLAD_REPRODUCIBLE   ON CACHE BOOL    "" FORCE)
 FetchContent_Declare(glfw
 	GIT_REPOSITORY https://github.com/glfw/glfw.git
 	GIT_TAG        3.4
-	GIT_SHALLOW    TRUE)
+	GIT_SHALLOW    TRUE
+	GIT_SUBMODULES "")
 
 FetchContent_Declare(glm
 	GIT_REPOSITORY https://github.com/g-truc/glm.git
 	GIT_TAG        1.0.1
-	GIT_SHALLOW    TRUE)
+	GIT_SHALLOW    TRUE
+	GIT_SUBMODULES "")
 
 FetchContent_Declare(glad
 	GIT_REPOSITORY https://github.com/Dav1dde/glad.git
 	GIT_TAG        v0.1.36
-	GIT_SHALLOW    TRUE)
+	GIT_SHALLOW    TRUE
+	GIT_SUBMODULES "")
 
 FetchContent_Declare(imgui
 	GIT_REPOSITORY https://github.com/ocornut/imgui.git
 	GIT_TAG        v1.91.8
-	GIT_SHALLOW    TRUE)
+	GIT_SHALLOW    TRUE
+	GIT_SUBMODULES "")
 
-FetchContent_MakeAvailable(glfw glm imgui)
-
-# Pre-generated glad loader, checked in so a viewer build needs no Python.
-if(EXISTS "${CMAKE_SOURCE_DIR}/tools/vendor/glad-generated/src/glad.c")
-	add_library(glad tools/vendor/glad-generated/src/glad.c)
-	target_include_directories(glad PUBLIC tools/vendor/glad-generated/include)
-else()
-	FetchContent_MakeAvailable(glad)
-endif()
+FetchContent_MakeAvailable(glfw glm glad imgui)
 
 # Dear ImGui, wired to the GLFW platform backend and to the project's
 # unmodified upstream OpenGL renderer backend.

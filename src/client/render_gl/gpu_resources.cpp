@@ -104,12 +104,6 @@ std::string shaderSettings() {
         << settings::Collisions::Impacts::PATCHES_PER_SURFACE << '\n';
     out << "#define WORLD_RENDERING_GPU_IMPACT_BINDING " << settings::World::Rendering::Gpu::IMPACT_BINDING
         << '\n';
-    out << "#define WORLD_ASSETS_SKELETON_MAX_BONES " << settings::World::Assets::Skeleton::MAX_BONES << '\n';
-    out << "#define WORLD_RENDERING_SCENE_IMPACT_MAX_AVATAR "
-        << settings::World::Rendering::Scene::Impact::MAX_AVATAR << '\n';
-    out << "#define WORLD_RENDERING_SCENE_IMPACT_MAX_SCENE "
-        << settings::World::Rendering::Scene::Impact::MAX_SCENE_IMPACTS << '\n';
-    out << "#define WORLD_GAMEPLAY_MAX_PLAYERS " << settings::World::Gameplay::MAX_PLAYERS << '\n';
     const auto direction = glm::make_vec3(settings::World::Rendering::Scene::Shadow::DIRECTION.data());
     out << "#define WORLD_RENDERING_SCENE_SHADOW_DIRECTION vec3(" << direction.x << ',' << direction.y << ','
         << direction.z << ")\n";
@@ -126,7 +120,12 @@ std::filesystem::path asset(std::string_view relative) {
 // truncated log is still enough to act on.
 GLuint loadShader(GLenum stage, const std::string& file) {
     auto source = loadShaderSource(asset("src/client/render_gl/shaders/" + file));
-    source.insert(source.find('\n') + 1, shaderSettings());
+    // GLSL allows a comment header before the version directive.
+    const auto version = source.starts_with("#version ") ? 0 : source.find("\n#version ");
+    if (version == std::string::npos)
+        throw std::runtime_error("Shader has no version directive: " + file);
+    const auto lineEnd = source.find('\n', version == 0 ? 0 : version + 1);
+    source.insert(lineEnd + 1, shaderSettings());
     const char* code = source.c_str();
 
     GLuint object = glCreateShader(stage);

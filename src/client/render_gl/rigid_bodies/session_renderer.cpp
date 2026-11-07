@@ -414,9 +414,14 @@ Renderer::Impl::~Impl() {
      * is freed by the code that created it, and before the window/context are
      * destroyed.
      */
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    if (ImGui::GetCurrentContext()) {
+        const auto& io = ImGui::GetIO();
+        if (io.BackendRendererUserData)
+            ImGui_ImplOpenGL3_Shutdown();
+        if (io.BackendPlatformUserData)
+            ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
 
     /* Release our own GL objects. Safe now: context is current and ImGui is no longer touching any GL state. */
     releaseGlObjects(*this);

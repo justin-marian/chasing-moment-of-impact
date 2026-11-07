@@ -14,7 +14,7 @@
 #include "avatar.glsl"
 #include "scene.glsl"
 #include "enclosure.glsl"
-#include "bodies.glsl"
+#include "body.glsl"
 #include "color.glsl"
 #include "impacts.glsl"
 

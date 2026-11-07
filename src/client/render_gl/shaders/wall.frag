@@ -57,8 +57,9 @@ float glassFresnel(vec3 N, vec3 V) {
  * @return Strongest heat in [0, 1].
  */
 float wallImpactHeat(int idx, vec3 pos, vec3 n, bool enabled) {
-    if (!enabled)
+    if (!enabled) {
         return 0.0;
+    }
 
     float heat = 0.0;
     for (int k = 0; k < COLLISIONS.IMPACTS.PATCHES_PER_IMPACT; ++k) {

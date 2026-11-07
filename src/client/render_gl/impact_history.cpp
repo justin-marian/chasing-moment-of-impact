@@ -30,7 +30,7 @@ void ImpactHistory::insert(Slots& slots, const ImpactPatch& patch) {
         /* Nearby manifold points represent one physical hot region. */
         if (
             p.energy_J > 0 && 
-            sim::dot(p.normal, patch.normal) > ettings::World::Rendering::Impacts::History::MERGE_NORMAL_DOT &&
+            sim::dot(p.normal, patch.normal) > settings::World::Rendering::Impacts::History::MERGE_NORMAL_DOT &&
             sim::length(p.point_m - patch.point_m) < patch.radius_m * settings::World::Rendering::Impacts::History::MERGE_RADIUS_FRACTION
         ) {
             if (patch.energy_J >= p.energy_J || p.age_s > settings::World::Rendering::Impacts::History::REPLACE_AGE_S) {

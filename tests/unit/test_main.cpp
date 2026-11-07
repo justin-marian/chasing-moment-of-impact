@@ -315,8 +315,8 @@ void test_matrix__a_b_c_counts_exact() {
     constexpr int LOWERCASE_OFFSET = 32;
 
     for (const char* id : {"A", "B", "C"}) {
-        const auto basePath = std::filesystem::exists("config") ? std::filesystem::current_path() : std::filesystem::path(PROJECT_DIR);
-        const auto configPath = basePath / "config/examples" / (std::string("scenarios_matrix_") + static_cast<char>(id[0] + LOWERCASE_OFFSET) + ".yaml");
+        const auto basePath = std::filesystem::exists("configs") ? std::filesystem::current_path() : std::filesystem::path(PROJECT_DIR);
+        const auto configPath = basePath / "configs" / (std::string("scenarios_matrix_") + static_cast<char>(id[0] + LOWERCASE_OFFSET) + ".yaml");
 
         auto config = loadScenario(configPath);
         auto expected = matrixScenario(id);

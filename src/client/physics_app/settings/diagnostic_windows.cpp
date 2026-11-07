@@ -9,6 +9,7 @@
 
 #include "settings/world/constants.h"
 #include "settings/world/ui_constants.h"
+
 #include "client/physics_app/settings/diagnostic_windows.h"
 #include "client/render_gl/controls.h"
 
@@ -104,8 +105,9 @@ void drawBodiesPanel(Session& s, ImVec2 displaySize) {
     clipper.Begin(s.simulation.state.count_i, settings::World::Ui::Physics::Inspector::BODY_ROW_HEIGHT);
 
     while (clipper.Step()) {
-        for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i)
+        for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i) {
             drawBodyRow(s, i, fonts);
+        }
     }
 
     ImGui::EndChild();
@@ -123,10 +125,8 @@ void drawInspector(Session& s, bool presentation) {
         return;
 
     const auto displaySize = ImGui::GetIO().DisplaySize;
-
     if (s.view.logWidget)
         drawSimulationLog(s, displaySize);
-
     if (s.view.rightPanel)
         drawBodiesPanel(s, displaySize);
 }

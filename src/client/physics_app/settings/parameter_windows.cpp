@@ -158,7 +158,7 @@ void drawImpactPalette(const render::Fonts& fonts, const render::ImpactHistory& 
     for (int i = 0; i < HEAT_SEGMENT_COUNT; ++i) {
         draw->AddRectFilledMultiColor(
             {p.x + float(i) * settings::World::Ui::Physics::Controls::HEAT_SEGMENT_WIDTH, p.y},
-            {p.x + float(i + 1) * settings::World::Ui::Physics::Controls::HEAT_SEGMENT_WIDTH, p.y + settings::World::Ui::Physics::Controls::HEAT_HEIGHT},
+            {p.x + float(i + 1) * settings::World::Ui::Physics::Controls::HEAT_SEGMENT_WIDTH, p.y + settings::World::Ui::Physics::Controls::HEIGHT},
             settings::World::Ui::Physics::Controls::COLORS[i],
             settings::World::Ui::Physics::Controls::COLORS[i + 1],
             settings::World::Ui::Physics::Controls::COLORS[i + 1],
@@ -168,7 +168,7 @@ void drawImpactPalette(const render::Fonts& fonts, const render::ImpactHistory& 
 
     ImGui::Dummy({
         settings::World::Ui::Physics::Controls::HEAT_SEGMENT_WIDTH * float(HEAT_SEGMENT_COUNT),
-        settings::World::Ui::Physics::Controls::HEAT_HEIGHT + HEAT_PADDING
+        settings::World::Ui::Physics::Controls::HEIGHT + HEAT_PADDING
     });
     ImGui::TextUnformatted("Gentle Violent");
 

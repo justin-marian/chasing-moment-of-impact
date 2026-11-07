@@ -1,0 +1,15 @@
+id: B
+spheres_i: 250
+cubes_i: 500
+cylinders_i: 500
+cones_i: 500
+seed: 42
+radius_m: 0.35
+boxHalfExtentX_m: 20
+boxHalfExtentY_m: 15
+boxHalfExtentZ_m: 20
+dt_s: 0.008333333333333333
+gravity_mps2: 9.81
+maxInitialSpeed_mps: 5
+cellSize_m: 1.6
+enableCcd: true

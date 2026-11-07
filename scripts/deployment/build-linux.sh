@@ -176,9 +176,9 @@ cmake -S "${PROJECT_ROOT}" -B "${BUILD_DIR}" -G Ninja \
 # 3. Build, then copy redistributable libraries only after a successful build.
 echo ""
 echo "Building with ${JOBS} parallel jobs"
-cmake --build "${BUILD_DIR}" --parallel "${JOBS}"
+PYTHONUTF8=1 cmake --build "${BUILD_DIR}" --parallel "${JOBS}"
 
-OUTPUT_DIR="${PROJECT_ROOT}/exports/builds/linux-x64"
+OUTPUT_DIR="${PROJECT_ROOT}/exports/builds/linux-$(uname -m)"
 copy_runtime_libraries "${OUTPUT_DIR}"
 
 echo ""

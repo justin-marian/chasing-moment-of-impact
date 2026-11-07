@@ -307,7 +307,8 @@ if ($LASTEXITCODE -ne 0) {
 
 # 3. Build, then copy redistributable DLLs only after a successful build.
 Write-Host "Building with $Jobs parallel jobs"
-& cmake --build $BuildDirectory --parallel $Jobs
+# GLAD 0.1 opens its bundled UTF-8 registry in Python's default text encoding.
+& cmake -E env PYTHONUTF8=1 cmake --build $BuildDirectory --parallel $Jobs
 $buildStatus = $LASTEXITCODE
 
 if ($buildStatus -eq 0) {

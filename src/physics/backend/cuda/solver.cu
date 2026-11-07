@@ -116,8 +116,7 @@ void CudaBackend::solver(StateView s, const WorldConfig& c) {
 	CUDA_CHECK(cudaGetLastError());
 
 	solveContactsKernel<<<1, settings::Compute::Cuda::BLOCK_SIZE, 0, stream.value>>>(
-		s, c, contacts.ptr, c
-        oloredIndices.ptr, colorOffsets.ptr, colorNumber.ptr,
+		s, c, contacts.ptr, coloredIndices.ptr, colorOffsets.ptr, colorNumber.ptr,
 		trackImpacts ? impactMeasures->ptr : nullptr, 
         trackImpacts ? impactEvents->ptr : nullptr
 	);

@@ -121,8 +121,7 @@ Json runMetadata(const Scenario& scenario, const Backend& backend, const Json& c
  */
 RunLog::RunLog(
     const std::filesystem::path& dir, 
-    const Scenario& scenario, c
-    onst Backend& backend, 
+    const Scenario& scenario, const Backend& backend, 
     const State& initial
 ) : directory(dir) {
     std::filesystem::create_directories(directory);

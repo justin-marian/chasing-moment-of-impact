@@ -58,28 +58,23 @@ State::State(int capacity) : capacity_i(capacity) {
  */
 StateView State::view() {
     return {
-        count_i,
-        /* Linear kinematics. */
-        position_m.data(),
-        velocity_mps.data(),
-        angularVelocity_rad_s.data(),
-        /* Rotation and geometry. */
-        orientation.data(),
-        halfExtents_m.data(),
-        aabbExtent_m.data(),
-        /* Mass and force accumulators. */
-        inverseMass_per_kg.data(),
-        inverseInertia_kg_m2.data(),
-        force_N.data(),
-        gravityScale_unitless.data(),
-        /* Broad-phase bounds. */
-        boundingRadius_m.data(),
-        wallProjection_m.data(),
-        /* Solver and tracking flags. */
-        shape_i.data(),
-        sleepCounter_i.data(),
-        isSleeping.data(),
-        hasContact.data()
+        .count_i = count_i,
+        .position_m = position_m.data(),
+        .velocity_mps = velocity_mps.data(),
+        .angularVelocity_rad_s = angularVelocity_rad_s.data(),
+        .halfExtents_m = halfExtents_m.data(),
+        .inverseInertia_kg_m2 = inverseInertia_kg_m2.data(),
+        .force_N = force_N.data(),
+        .aabbExtent_m = aabbExtent_m.data(),
+        .orientation = orientation.data(),
+        .inverseMass_per_kg = inverseMass_per_kg.data(),
+        .gravityScale_unitless = gravityScale_unitless.data(),
+        .boundingRadius_m = boundingRadius_m.data(),
+        .wallProjection_m = wallProjection_m.data(),
+        .shape_i = shape_i.data(),
+        .sleepCounter_i = sleepCounter_i.data(),
+        .isSleeping = isSleeping.data(),
+        .hasContact = hasContact.data()
     };
 }
 

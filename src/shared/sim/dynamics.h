@@ -187,7 +187,7 @@ SIM_HD inline void updateSleep(StateView s, int i, const WorldConfig& c) {
 
     if (s.hasContact[i] && 
         length(s.velocity_mps[i]) < c.sleepLinVel_mps &&
-        length(s.angularVelocity_rad_s[i]) < c.sleepAngVel_radS) {
+        length(s.angularVelocity_rad_s[i]) < c.sleepAngVel_rad_s) {
         
         ++s.sleepCounter_i[i];
         

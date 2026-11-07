@@ -7,8 +7,6 @@
  */
 #pragma once
 
-#include "settings/world/constants.h"
-
 #include <cstdint>
 #include <string_view>
 
@@ -25,10 +23,13 @@ namespace utils {
  * @return Stable 64-bit case-sensitive FNV-1a command key.
  */
 constexpr std::uint64_t commandKey(std::string_view text) {
-    std::uint64_t result = settings::World::Network::CommandHash::OFFSET_BASIS;
+    constexpr std::uint64_t OFFSET_BASIS = 14695981039346656037ULL;
+    constexpr std::uint64_t PRIME = 1099511628211ULL;
+
+    std::uint64_t result = OFFSET_BASIS;
     for (unsigned char ch : text) {
         result ^= ch;
-        result *= settings::World::Network::CommandHash::PRIME;
+        result *= PRIME;
     }
     return result;
 }

@@ -41,6 +41,8 @@ SIM_HD inline int clipPolygon(
     if (!count) return 0;
 
     int written = 0;
+    
+    // Start by looking at the edge connecting the last vertex to the first.
     Vec3 previous = input[count - 1];
     Real before = dot(previous - center, axis) - limit_m;
 
@@ -48,14 +50,17 @@ SIM_HD inline int clipPolygon(
         Vec3 current = input[i];
         Real after = dot(current - center, axis) - limit_m;
         
+        // Check which side of the clipping plane each vertex lies on.
         bool previousInside = before <= EPSILON;
         bool currentInside = after <= EPSILON;
         
+        // If the edge crosses the plane, compute the intersection point.
         if (previousInside != currentInside) {
             Real fraction = before / (before - after);
             output[written++] = previous + (current - previous) * fraction;
         }
 
+        // If the current vertex is inside, keep it.
         if (currentInside) {
             output[written++] = current;
         }
@@ -92,20 +97,25 @@ SIM_HD inline int pairContacts(
     const WorldConfig& c, 
     Contact* out
 ) {
+    // Tolerances for alignment and duplicate point rejection.
     constexpr Real OBB_ALIGNMENT_THRESHOLD = Real(.999);
     constexpr Real DUPLICATE_DISTANCE = Real(1e-5);
     constexpr Real MIDPOINT_SCALE = Real(.5);
 
     Contact base{};
+    
+    // Get the base single-point contact (handles spheres and initial overlap).
     if (!pairContact(s, a, b, dt_s, c, base)) return 0;
 
     out[0] = base;
     
+    // Spheres only ever produce a single contact point, so we can return early.
     if (s.shape_i[a] == static_cast<int>(Shape::Sphere) || 
         s.shape_i[b] == static_cast<int>(Shape::Sphere)) {
         return 1;
     }
 
+    // Extract the principal axes of both OBBs in world space.
     Vec3 axesA[3] = {
         rotate(s.orientation[a], {1, 0, 0}), 
         rotate(s.orientation[a], {0, 1, 0}),
@@ -120,6 +130,7 @@ SIM_HD inline int pairContacts(
     Real alignA = 0, alignB = 0;
     int indexA = 0, indexB = 0;
 
+    // Find which axis of each body is most aligned with the collision normal.
     for (int k = 0; k < 3; ++k) {
         Real da = absolute(dot(axesA[k], base.normal));
         Real db = absolute(dot(axesB[k], base.normal));
@@ -135,8 +146,10 @@ SIM_HD inline int pairContacts(
         }
     }
 
+    // If the faces aren't aligned enough, fall back to the single point contact.
     if (maximum(alignA, alignB) < OBB_ALIGNMENT_THRESHOLD) return 1;
 
+    // Choose the body with the most aligned face as the reference.
     bool referenceA = alignA >= alignB;
     int reference = referenceA ? a : b;
     int incident = referenceA ? b : a;
@@ -148,11 +161,14 @@ SIM_HD inline int pairContacts(
 
     Vec3 h = s.halfExtents_m[reference];
     Vec3 ih = s.halfExtents_m[incident];
+    
+    // Center of the reference face.
     Vec3 center = s.position_m[reference] + normal * h[faceAxis];
 
     int incidentAxis = 0;
     Real alignment = 0;
 
+    // Find the incident face on the other body (most anti-aligned with the normal).
     for (int k = 0; k < 3; ++k) {
         Real v = absolute(dot(other[k], normal));
         if (v > alignment) {
@@ -162,15 +178,21 @@ SIM_HD inline int pairContacts(
     }
 
     Real sign = dot(other[incidentAxis], normal) > 0 ? Real(-1) : Real(1);
+    
+    // Center of the incident face.
     Vec3 incidentCenter = s.position_m[incident] + other[incidentAxis] * (ih[incidentAxis] * sign);
 
     int iu = (incidentAxis + 1) % 3, iv = (incidentAxis + 2) % 3;
+    
+    // Basis vectors for the incident face.
     Vec3 u = other[iu] * ih[iu];
     Vec3 v = other[iv] * ih[iv];
     
     int ru = (faceAxis + 1) % 3, rv = (faceAxis + 2) % 3, count = 4;
 
     Vec3 second[12];
+    
+    // Initial incident polygon (4 corners).
     Vec3 first[12] = {
         incidentCenter - u - v, 
         incidentCenter + u - v, 
@@ -178,21 +200,27 @@ SIM_HD inline int pairContacts(
         incidentCenter - u + v
     };
 
+    // Clip the incident polygon against the four side planes of the reference face.
     count = clipPolygon(first, count, second, axes[ru], center, h[ru]);
     count = clipPolygon(second, count, first, -axes[ru], center, h[ru]);
     count = clipPolygon(first, count, second, axes[rv], center, h[rv]);
     count = clipPolygon(second, count, first, -axes[rv], center, h[rv]);
 
     int written = 0;
+    
+    // Limit to max 4 manifold points for stability and performance.
     int samples = count > 4 ? 4 : count;
 
     for (int k = 0; k < samples; ++k) {
         Vec3 point = first[k * count / samples];
         Real depth = dot(center - point, normal);
         
+        // Ignore points that are separated by more than the allowed slop.
         if (depth < -c.contactSlop_m) continue;
 
         bool duplicate = false;
+        
+        // Ensure the new point isn't too close to an existing one.
         for (int j = 0; j < written; ++j) {
             if (length(out[j].point_m - (point + normal * (depth * MIDPOINT_SCALE))) < DUPLICATE_DISTANCE) {
                 duplicate = true;
@@ -226,16 +254,21 @@ SIM_HD inline int pairContacts(
  * @return True when the wall requires a contact constraint.
  */
 SIM_HD inline bool wallContact(StateView s, int a, int face, Real dt_s, const WorldConfig& c, Contact& out) {
+    // Decode face index into axis (0-2) and sign (+1 or -1).
     int axis = face / 2;
     Real sign = (face % 2) == 0 ? Real(-1) : Real(1);
 
     Vec3 normal{};
     normal[axis] = sign;
 
+    // Calculate penetration depth against the wall.
     Real depth = sign * s.position_m[a][axis] + s.aabbExtent_m[a][axis] - c.boxHalfExtents_m[axis];
     Vec3 point = supportCentroid(s, a, normal);
+    
+    // Relative velocity along the wall normal.
     Real outward = dot(s.velocity_mps[a] + cross(s.angularVelocity_rad_s[a], point - s.position_m[a]), normal);
 
+    // Skip if not penetrating and CCD doesn't predict a crossing this frame.
     if (depth < -c.contactSlop_m && (!c.enableCcd || depth + outward * dt_s < 0)) return false;
 
     out = {};
@@ -273,6 +306,7 @@ SIM_HD inline bool wallVertexContact(
     const WorldConfig& c, 
     Contact& out
 ) {
+    // Spheres use the analytic wallContact path.
     if (s.shape_i[a] == static_cast<int>(Shape::Sphere)) {
         return corner == 0 && wallContact(s, a, face, dt_s, c, out);
     }
@@ -284,6 +318,7 @@ SIM_HD inline bool wallVertexContact(
     normal[axis] = sign;
     Vec3 half = s.halfExtents_m[a];
 
+    // Decode corner bitmask into local coordinates.
     Vec3 local{
         corner & 1 ? half.x : -half.x, 
         corner & 2 ? half.y : -half.y, 
@@ -296,9 +331,13 @@ SIM_HD inline bool wallVertexContact(
     Real depth = sign * point[axis] - c.boxHalfExtents_m[axis];
     Real outward = dot(s.velocity_mps[a] + cross(s.angularVelocity_rad_s[a], offset), normal);
 
+    // Second-order rotational sweep bound to prevent tunneling.
     Real rotationMargin = s.boundingRadius_m[a] * dot(s.angularVelocity_rad_s[a], s.angularVelocity_rad_s[a]) * dt_s * dt_s;
+    
+    // Absolute bound to ensure we don't miss a corner crossing.
     Real conservativeSweep = sign * s.position_m[a][axis] + s.boundingRadius_m[a] + length(s.velocity_mps[a]) * dt_s - c.boxHalfExtents_m[axis];
 
+    // Skip if not penetrating and CCD doesn't predict a crossing.
     if (depth < -c.contactSlop_m && (!c.enableCcd || (depth + outward * dt_s + rotationMargin < 0 && conservativeSweep < 0))) {
         return false;
     }

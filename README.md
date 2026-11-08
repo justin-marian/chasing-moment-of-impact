@@ -65,25 +65,118 @@
 
 ---
 
+## :desktop_computer: Interactive Viewer
+
+<div align="center">
+  <img src="docs/figures/app_running.jpg" alt="3D Virtual World Physics Viewer" width="100%" />
+</div>
+
+> [!INFO]
+> **Left Panels: Simulation & Environment**
+> 
+> The left side of the dashboard provides real-time control over the simulation state, object spawning, and visual debugging.
+> 
+> *   **Simulation Widget:**
+>     *   **Backend Toggle:** Instantly switch between **CPU** and **CUDA** execution mid-session.
+>     *   **Scenario & Seed:** Select pre-configured scenes (e.g., *Matrix A / 850*) and set the deterministic seed (`42`).
+>     *   **Playback:** Full control with **Run**, **Pause**, and **Reset** buttons.
+> *   **Spawn Objects Widget:**
+>     *   Choose a shape (*Sphere, Cube, Cylinder, Cone*), set a count (e.g., `10`), and inject them into the live simulation.
+> *   **Simulation Log Widget:**
+>     *   A real-time event log (e.g., *"Ready. Fixed time step; seeded spawn."*) with a built-in text filter.
+> *   **Camera & Impact Display Widget:**
+>     *   **Camera Sliders:** Adjust **Orbit** (`0.79`), **Elevation** (`0.33`), and **Zoom** (`84 m`).
+>     *   **Debug Overlays:** Toggle **AABB**, **OBB**, and **Velocity** vectors.
+>     *   **Collision Impacts:** Toggle **Impact heat coloring** and **Keep impact marks**.
+>     *   **Heatmap Tuning:** Adjust **Fade time** (`8.0 s`) and **Red at energy** (`10.0 J`) using the thin track sliders. 
+>     *   **Severity Legend:** A gradient bar from *Gentle* (blue) to *Violent* (red), showing exact telemetry for the last hit (e.g., *Last hit 0.85 J / 0.63 m/s*).
+
+> [!NOTE]
+> **Right Panel & Toolbar: Diagnostics & Physics**
+> 
+> The right side and top bar are dedicated to performance monitoring, fine-tuning the solver, and inspecting individual bodies.
+> 
+> *   **Top Toolbar:**
+>     *   Quick access to **Pause**, **Reset**, and a **Widgets** menu to toggle panels.
+>     *   Displays the active backend and total body count (`cuda / 850 bodies`).
+>     *   Press `F1` to hide the UI entirely.
+> *   **Performance Widget:**
+>     *   Live readouts for **Physics** time (`6.99 ms`), **Render** time (`0.55 ms`), and total active **Contacts** (`6614`).
+> *   **Physics Settings Widget:**
+>     *   **World Sliders:** Gravity (`9.81`), Time step (`8 ms`), Substeps (`8`), Linear drag (`0.01`), and Angular drag (`0.05`).
+>     *   **Solver Sliders:** Restitution (`0.45`), Friction static (`0.50`), Friction kinetic (`0.40`), and Solver passes (`10`).
+>     *   **Toggles:** Enable/disable **Sleeping** and **Sphere / wall CCD** (Continuous Collision Detection).
+>     *   **Actions:** Use **Step once** to advance a single physics tick, or **Export motion** to dump telemetry to CSV.
+> *   **Bodies Widget:**
+>     *   A virtualized, scrollable list of every body. Each row shows the body ID, exact X/Y/Z position in metres, and current speed (e.g., *Body 0: -7.49 / -14.65 / -2.79, speed 0.01 m/s*).
+
 <br>
 <a id="quick-start" href="#quick-start"><img src="https://img.shields.io/badge/Quick%20start-2563EB?style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTggNXYxNGwxMS03eiIvPjwvc3ZnPg%3D%3D" height="40" alt="Quick start"></a>
 <br><br>
 
+From the repository root, build the CPU and CUDA backends alongside the OpenGL viewer, and immediately launch **Matrix A**.
 
-From the repository root, build the CPU and CUDA backends with the OpenGL viewer and launch Matrix A. The examples use SM 89. Set the architecture flag to your GPU’s compute capability.
+> [!WARNING]
+> **Prerequisites:** Ensure you are running these commands from the **project root** (the folder containing `CMakeLists.txt`).
+> If you do not have an NVIDIA GPU, remove the `-Cuda` / `--cuda` flags and use `--backend cpu` when launching.
+>
+> **Note on Architecture:** The examples below use SM 89 (Ada Lovelace architecture). Please set the `Architecture` / `arch` flag to match your GPU's actual compute capability. You can find your specific GPU's compute capability in the official [NVIDIA CUDA GPU Compute Capability List](https://developer.nvidia.com/cuda/gpus) (e.g., `86` for Ampere consumer, `75` for Turing).
 
-**Windows · PowerShell**
+**Windows · PowerShell:**
 
 ```powershell
+# Build the simulator with CUDA and the OpenGL viewer (SM 89)
 .\scripts\deployment\build-windows.ps1 -Cuda -Viewer -Architecture 89
-.\exports\builds\windows-x64\physics_viewer.exe --backend cuda --scenario A
+# Launch MATRIX A with the CUDA backend
+if ($?) { .\exports\builds\windows-x64\physics_viewer.exe --backend cuda --scenario A }
 ```
 
-**Linux · Bash**
+**Linux · Bash:**
 
 ```bash
-bash ./scripts/deployment/build-linux.sh --cuda --viewer --arch 89
+# Make the build script executable (first time only)
+chmod +x ./scripts/deployment/build-linux.sh
+# Build the viewer with CUDA support (SM 89) and launch Matrix A
+bash ./scripts/deployment/build-linux.sh --cuda --viewer --arch 89 && \
 ./exports/builds/linux-$(uname -m)/physics_viewer --backend cuda --scenario A
+```
+
+**Clean Build Directories:**
+
+> [!TIP]
+> **Clean Rebuild:** To ensure a completely fresh compilation, you can clear all CMake caches and previously compiled binaries by running the commands for your operating system below.
+
+**Linux · Bash:**
+
+```sh
+# Remove the temporary build directory
+rm -rf tmp/
+
+# Remove the compiled binaries (safely preserving .gitkeep files if they exist)
+find exports/builds -type f ! -name '.gitkeep' -delete 2>/dev/null || true
+find exports/builds -mindepth 1 -type d -empty -delete 2>/dev/null || true
+
+# Remove any stray CMake cache files
+rm -rf CMakeFiles CMakeCache.txt
+```
+
+**Windows · PowerShell:**
+
+```powershell
+# Remove the temporary build directory
+Remove-Item -Path tmp/ -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove the compiled binaries (safely preserving .gitkeep files if they exist)
+if (Test-Path exports/builds) {
+    # Delete all files EXCEPT .gitkeep
+    Get-ChildItem -Path exports/builds -Recurse -File | Where-Object { $_.Name -ne '.gitkeep' } | Remove-Item -Force
+    # Delete empty directories
+    Get-ChildItem -Path exports/builds -Recurse -Directory | Sort-Object FullName -Descending | Where-Object { @(Get-ChildItem $_.FullName).Count -eq 0 } | Remove-Item -Force
+}
+
+# Remove any stray CMake cache files
+Remove-Item -Path CMakeFiles -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path CMakeCache.txt -Force -ErrorAction SilentlyContinue
 ```
 
 For CPU-only use, omit `-Cuda` or `--cuda` and launch with `--backend cpu`. The CPU build supports the same box scenes and viewer controls. See [build requirements](#configuration) for toolchain and driver details.

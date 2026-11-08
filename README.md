@@ -71,7 +71,7 @@
   <img src="docs/figures/app_running.jpg" alt="3D Virtual World Physics Viewer" width="100%" />
 </div>
 
-> [!INFO]
+> [!TIP]
 > **Left Panels: Simulation & Environment**
 > 
 > The left side of the dashboard provides real-time control over the simulation state, object spawning, and visual debugging.
@@ -91,7 +91,7 @@
 >     *   **Heatmap Tuning:** Adjust **Fade time** (`8.0 s`) and **Red at energy** (`10.0 J`) using the thin track sliders. 
 >     *   **Severity Legend:** A gradient bar from *Gentle* (blue) to *Violent* (red), showing exact telemetry for the last hit (e.g., *Last hit 0.85 J / 0.63 m/s*).
 
-> [!NOTE]
+> [!TIP]
 > **Right Panel & Toolbar: Diagnostics & Physics**
 > 
 > The right side and top bar are dedicated to performance monitoring, fine-tuning the solver, and inspecting individual bodies.

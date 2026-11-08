@@ -1,27 +1,41 @@
 #!/bin/bash
 
-# Ensure the script is running from the project root
-cd "$(dirname "$0")" || exit
+# Go up one level from scripts/ to the project root
+cd "$(dirname "$0")/.." || exit
 
 echo "==================================================="
-echo " Chasing Moment of Impact - Viewer Launcher"
+echo " Chasing the Moment of Impact - Build and Launch"
 echo "==================================================="
 echo ""
 
-# Detect architecture (e.g., x86_64)
+# ---------------------------------------------------------
+# BUILD THE PROJECT
+# ---------------------------------------------------------
+echo "[1/2] Building the simulator..."
+
+# NOTE: If you do not have an NVIDIA GPU, remove the --cuda flag below!
+chmod +x ./scripts/deployment/build-linux.sh
+bash ./scripts/deployment/build-linux.sh --cuda --viewer --arch 89
+
+# Check if the build succeeded
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "[ERROR] Build failed. Aborting launch."
+    exit 1
+fi
+
+echo ""
+echo "[2/2] Build successful. Launching viewer..."
+echo ""
+
+# ---------------------------------------------------------
+# CHOOSE YOUR RUN MODE
+# ---------------------------------------------------------
 ARCH=$(uname -m)
 BIN_DIR="./exports/builds/linux-${ARCH}"
 VIEWER="${BIN_DIR}/physics_viewer"
 
-if [ ! -f "$VIEWER" ]; then
-    echo "Error: Viewer executable not found at $VIEWER"
-    echo "Please build the project first: ./scripts/deployment/build-linux.sh --viewer --cuda"
-    exit 1
-fi
-
-# ---------------------------------------------------------
-# Choose your run mode by uncommenting ONE of the lines below
-# ---------------------------------------------------------
+# Uncomment ONE of the lines below to choose your launch mode.
 
 # Default Launch (CPU, Demo Scene)
 # "$VIEWER"

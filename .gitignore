@@ -36,9 +36,6 @@ test-artifacts/
 
 # Runtime outputs from the CLI and viewer
 generated/
-tmp/
-tmp/build/windows/
-tmp/build/linux/
 logs/*.log
 *.log
 
@@ -67,5 +64,10 @@ core
 vgcore.*
 
 # Ignore all compiled exports and build artifacts
-/exports/
+/exports/*
 !/exports/.gitkeep
+!/exports/**/.gitkeep
+
+/tmp/*
+!/tmp/.gitkeep
+!/tmp/**/.gitkeep

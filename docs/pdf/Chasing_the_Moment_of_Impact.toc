@@ -1,0 +1,37 @@
+\babel@toc {romanian}{}\relax 
+\contentsline {section}{\numberline {1}De la cădere la impact}{1}{section.1}%
+\contentsline {section}{\numberline {2}Rigid-body state and dynamics}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Position, orientation, mass, and inertia}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Gravity, damping, and time integration}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Quaternion rotation}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Energy and diagnostics}{3}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Collision detection}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Broad phase and spatial grid}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Narrow phase and contact manifolds}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Intersection tests}{6}{subsection.3.3}%
+\contentsline {paragraph}{\texttt {rayTriangle}.}{6}{section*.2}%
+\contentsline {paragraph}{\texttt {triangleTriangle}.}{6}{section*.3}%
+\contentsline {subsection}{\numberline {3.4}Continuous collision detection and wall contacts}{6}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Iterative contact solver}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Relative velocity and effective mass}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Restitution and normal impulse}{8}{subsection.4.2}%
+\contentsline {paragraph}{Exemplu între două sfere.}{8}{section*.4}%
+\contentsline {paragraph}{Exemplu de cădere și ricoșeu.}{8}{section*.5}%
+\contentsline {subsection}{\numberline {4.3}Angular impulse and friction}{9}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Position correction}{10}{subsection.4.4}%
+\contentsline {section}{\numberline {5}CUDA execution and reproducibility}{10}{section.5}%
+\contentsline {section}{\numberline {6}Scene rendering and impact visualization}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}From physics state to rendered frame}{11}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Soft contact shadows}{11}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Impact energy}{12}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Collision heatmap}{13}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Interfața viewer-ului}{14}{section.7}%
+\contentsline {section}{\numberline {8}Build și rulare}{16}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Build pe Windows}{17}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Build pe Linux}{17}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Validare experimentală}{17}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Metodă}{17}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Rezultate}{18}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Reproducerea comparației}{18}{subsection.9.3}%
+\contentsline {section}{\numberline {10}Concluzii}{19}{section.10}%
+\contentsline {section}{Sursele proiectului}{19}{section*.6}%

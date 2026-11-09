@@ -1,0 +1,156 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{custom}[2026/11/09 Custom Style for Chasing the Moment of Impact]
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+  \setmainfont{lmroman10-regular.otf}[
+    BoldFont=lmroman10-bold.otf,
+    ItalicFont=lmroman10-italic.otf,
+    BoldItalicFont=lmroman10-bolditalic.otf
+  ]
+  \tracinglostchars=3
+\fi
+
+\IfFileExists{romanian.ldf}{\usepackage[romanian]{babel}}{}
+
+\AtBeginDocument{%
+  \renewcommand{\abstractname}{Rezumat}%
+  \renewcommand{\contentsname}{Cuprins}%
+  \renewcommand{\figurename}{Figura}%
+  \renewcommand{\tablename}{Tabelul}%
+  \renewcommand{\refname}{Bibliografie}%
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[margin=24mm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{expl3}
+
+\definecolor{inkblue}{HTML}{173B56}
+\definecolor{codepaper}{HTML}{F5F7FA}
+\definecolor{codeink}{HTML}{182436}
+\definecolor{codekeyword}{HTML}{164FA0}
+\definecolor{codetype}{HTML}{00645D}
+\definecolor{codestring}{HTML}{8B3415}
+\definecolor{codecomment}{HTML}{536473}
+\definecolor{codemacro}{HTML}{703B85}
+\definecolor{codesourcepaper}{HTML}{E8F1FB}
+
+% Change this line in custom.sty:
+\graphicspath{{../../}}
+
+\lstdefinelanguage{ReportCpp}[]{C++}{
+  morekeywords=[2]{Real,Vec3,Quat,StateView,Contact,WorldConfig,ImpactMeasure},
+  morekeywords=[3]{SIM_HD,__syncthreads,threadIdx,blockDim}
+}
+\lstdefinelanguage{ReportGLSL}[]{C}{
+  morekeywords={layout,in,out,inout,uniform,discard},
+  morekeywords=[2]{vec2,vec3,vec4,mat3,mat4,sampler2D},
+  morekeywords=[3]{clamp,smoothstep,mix,normalize,dot,exp,srgb,aces}
+}
+\lstdefinelanguage{ReportPowerShell}{
+  sensitive=false,
+  morekeywords={foreach,if,else},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+  language=ReportCpp,
+  basicstyle=\ttfamily\fontsize{9}{11.5}\selectfont\color{codeink},
+  keywordstyle=\bfseries\color{codekeyword},
+  keywordstyle=[2]\color{codetype},
+  keywordstyle=[3]\color{codemacro},
+  commentstyle=\color{codecomment},
+  stringstyle=\color{codestring},
+  backgroundcolor=\color{codepaper},
+  numbers=left,
+  stepnumber=1,
+  numberfirstline=true,
+  numberblanklines=true,
+  numberstyle=\ttfamily\bfseries\fontsize{9}{11.5}\selectfont\color{codeink},
+  numbersep=9pt,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  frame=leftline,
+  rulecolor=\color{inkblue!28},
+  framesep=6pt,
+  xleftmargin=36pt,
+  framexleftmargin=30pt,
+  xrightmargin=6pt,
+  aboveskip=9pt,
+  belowskip=9pt
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=inkblue,
+  citecolor=inkblue,
+  urlcolor=inkblue,
+  pdftitle={Chasing the Moment of Impact},
+  pdflang={ro},
+  pdfauthor={Justin-Marian Popescu}
+}
+\urlstyle{tt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.16}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\clip}{\operatorname{clamp}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newcounter{codesource}
+\ExplSyntaxOn
+\seq_new:N \g_report_code_sources_seq
+\NewDocumentCommand{\CollectCodeSource}{mmm}{
+  \seq_gput_right:Nx \g_report_code_sources_seq {
+    \exp_not:N \CodeSourceIndexEntry {#1} {\exp_not:n{#2}} {\exp_not:n{#3}}
+  }
+}
+\NewDocumentCommand{\PrintCodeSources}{}{
+  \seq_use:Nn \g_report_code_sources_seq {}
+}
+\ExplSyntaxOff
+
+\newcommand{\CodeSourceIndexEntry}[3]{%
+  \hypertarget{code-index-#1}{}\hyperlink{code-text-#1}{\textbf{C#1}}
+  & \path{#2} & \textbf{#3}\\[2pt]}
+\newcommand{\RegisterCodeSource}[2]{%
+  \stepcounter{codesource}%
+  \edef\CodeSourceNumber{\arabic{codesource}}%
+  \hypertarget{code-text-\CodeSourceNumber}{}%
+  \CollectCodeSource{\CodeSourceNumber}{#1}{#2}}
+\newcommand{\coderef}[2]{%
+  \RegisterCodeSource{#1}{#2}%
+  \hyperlink{code-index-\CodeSourceNumber}{\textbf{C\CodeSourceNumber}}}
+
+\newenvironment{codefragment}[3]{%
+  \par\addvspace{12pt}\noindent\begin{minipage}{\linewidth}%
+  \RegisterCodeSource{#2}{#3}%
+  \def\CodeSourceFooter{%
+    \setlength{\fboxsep}{5pt}%
+    \colorbox{codesourcepaper}{%
+      \parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+        \raggedright\footnotesize
+        \hyperlink{code-index-\CodeSourceNumber}{\textbf{Sursă C\CodeSourceNumber}}%
+        \enspace\path{#2}\par
+        \textbf{\color{inkblue}Linii #3}}}}%
+  {\small\raggedright\textbf{Fragment C\CodeSourceNumber.}\enspace #1\par}%
+}{%
+  \par\noindent\CodeSourceFooter\par
+  \end{minipage}\par\addvspace{14pt}
+}
+
+\newcommand{\imagecredit}[1]{\par\smallskip{\footnotesize\raggedright
+  \noindent\textit{Imagine din proiect} \enspace #1\par}}

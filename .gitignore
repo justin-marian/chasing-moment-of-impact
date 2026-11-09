@@ -26,6 +26,10 @@ compile_commands.json
 *.pdb
 *.ilk
 *.exp
+*.aux
+*.bbl
+*.blg
+*.out
 
 *.ptx
 *.cubin

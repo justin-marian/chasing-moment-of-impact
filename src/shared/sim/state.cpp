@@ -29,23 +29,23 @@ State::State() : State(settings::Collisions::Storage::MAX_BODIES) {}
  */
 State::State(int capacity) : capacity_i(capacity) {
     for (auto* values : {
-        &position_m, &velocity_mps, &angularVelocity_rad_s, 
+        &position_m, &velocity_mps, &angularVelocity_rad_s,
         &halfExtents_m,  &inverseInertia_kg_m2, &force_N, &aabbExtent_m
     }) { values->resize(capacity); }
 
     orientation.resize(capacity);
 
     for (auto* values : {
-        &inverseMass_per_kg, 
-        &gravityScale_unitless, 
-        &boundingRadius_m, 
+        &inverseMass_per_kg,
+        &gravityScale_unitless,
+        &boundingRadius_m,
         &wallProjection_m
     }) { values->resize(capacity); }
 
     for (auto* values : {
-        &shape_i, 
-        &sleepCounter_i, 
-        &isSleeping, 
+        &shape_i,
+        &sleepCounter_i,
+        &isSleeping,
         &hasContact
     }) { values->resize(capacity); }
 }
@@ -105,10 +105,10 @@ bool State::spawn(const Body& body) {
     constexpr Real SPHERE_INERTIA_FACTOR = Real(.4);
     constexpr Real BOX_INERTIA_FACTOR = Real(3);
 
-    if (count_i >= capacity_i || 
-        body.mass_kg.value <= 0 || 
+    if (count_i >= capacity_i ||
+        body.mass_kg.value <= 0 ||
         !finite(body.position_m) ||
-        !finite(body.velocity_mps) || 
+        !finite(body.velocity_mps) ||
         !finite(body.halfExtents_m) ||
         minimum(body.halfExtents_m.x, minimum(body.halfExtents_m.y, body.halfExtents_m.z)) <= 0) {
         return false;

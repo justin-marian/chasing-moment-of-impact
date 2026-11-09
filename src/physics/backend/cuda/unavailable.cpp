@@ -21,7 +21,7 @@ namespace sim {
  */
 std::unique_ptr<Backend> createCudaBackend(int capacity_i) {
 	// Suppress unused parameter warning since the backend cannot be created.
-	(void)capacity_i; 
+	(void)capacity_i;
 	throw std::runtime_error("CUDA backend was disabled at build time; configure ENABLE_CUDA=ON");
 }
 

@@ -13,7 +13,7 @@ namespace {
  * Kernel to aggregate diagnostics, including contact and candidate counts.
  */
 __global__ void emitDiagnosticsKernel(
-	StateView s, WorldConfig c, 
+	StateView s, WorldConfig c,
     const int* counts, const int* candidateCounts,
     const int* overflow,
 	Diagnostics* out

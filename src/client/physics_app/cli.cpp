@@ -52,19 +52,19 @@ T parseInteger(std::string_view option, std::string_view text, int base = 10) {
 
         if constexpr (std::is_same_v<T, unsigned long long>) {
             const auto value = std::stoull(std::string(text), &consumed, base);
-            
+
             if (consumed != text.size()) {
                 throw std::invalid_argument("trailing characters");
             }
-            
+
             return value;
         } else {
             const auto value = std::stoll(std::string(text), &consumed, base);
-            
+
             if (consumed != text.size()) {
                 throw std::invalid_argument("trailing characters");
             }
-                
+
             if (value < static_cast<long long>(std::numeric_limits<T>::min()) ||
                 value > static_cast<long long>(std::numeric_limits<T>::max())) {
                 throw std::out_of_range("integer outside target range");
@@ -94,7 +94,7 @@ float parseFloat(std::string_view option, std::string_view text) {
         if (consumed != text.size() || !std::isfinite(value)) {
             throw std::invalid_argument("invalid float");
         }
-        
+
         return value;
     } catch (const std::exception&) {
         throw std::runtime_error("Invalid number for " + std::string(option) + ": " + std::string(text));
@@ -175,7 +175,7 @@ std::string requireValue(const Argument& arg, int& index, int argc, char** argv)
     if (++index >= argc) {
         throw std::runtime_error("Missing value for " + std::string(arg.name));
     }
-    
+
     return argv[index];
 }
 
@@ -196,7 +196,7 @@ sim::Vec3 parseHexColor(std::string_view raw) {
     const bool allHex = raw.size() == 6 && std::all_of(raw.begin(), raw.end(), [](unsigned char c) {
         return std::isxdigit(c) != 0;
     });
-    
+
     if (!allHex) {
         throw std::runtime_error("Color must be 6 hexadecimal digits, for example #3B82F6");
     }
@@ -206,7 +206,7 @@ sim::Vec3 parseHexColor(std::string_view raw) {
     const auto channel = [](unsigned long bits) {
         return static_cast<float>(bits & 0xff) * settings::World::PhysicsApp::Policy::RGB_SCALE;
     };
-    
+
     return {channel(rgb >> 16), channel(rgb >> 8), channel(rgb)};
 }
 #endif
@@ -225,12 +225,12 @@ void validate(const ViewerOptions& o) {
     if (!detail::oneOf(o.simulation.backend, "cpu", "cuda")) {
         throw std::runtime_error("Backend must be cpu or cuda");
     }
-    
+
 #ifdef SIM_BUILD_MMO
     if (!detail::oneOf(o.scene.mode, "physics", "world")) {
         throw std::runtime_error("Scene must be physics or world");
     }
-    
+
     if (!detail::oneOf(o.scene.character, "male", "female")) {
         throw std::runtime_error("Character must be male or female");
     }
@@ -252,7 +252,7 @@ void validate(const ViewerOptions& o) {
         o.impact.life > settings::World::Launcher::Limits::MAX_IMPACT_LIFE_S) {
         throw std::runtime_error("Impact lifetime must be in [0.1, 120] seconds");
     }
-    
+
     if (!std::isfinite(o.impact.redEnergy) ||
         o.impact.redEnergy < settings::World::Launcher::Limits::MIN_IMPACT_RED_ENERGY_J ||
         o.impact.redEnergy > settings::World::Launcher::Limits::MAX_IMPACT_RED_ENERGY_J) {
@@ -266,7 +266,7 @@ void validate(const ViewerOptions& o) {
     if (o.capture.frames < -1) {
         throw std::runtime_error("Frame count cannot be less than -1");
     }
-    
+
 #ifdef SIM_BUILD_MMO
     if (o.network.port < settings::World::Launcher::Limits::MIN_PORT ||
         o.network.port > settings::World::Launcher::Limits::MAX_PORT) {
@@ -281,7 +281,7 @@ void validate(const ViewerOptions& o) {
  */
 [[noreturn]] void showHelpAndExit() {
 #ifdef SIM_BUILD_MMO
-    std::cout 
+    std::cout
         << "physics_viewer --scene physics|world --backend cpu|cuda --scenario A|B|C|impact\n"
         << "  --environment village|forest|highlands|town --connect PORT --user NAME\n"
 #else
@@ -350,9 +350,9 @@ void applyValue(ViewerOptions& o, const Argument& arg, int& i, int argc, char** 
         case utils::commandKey("--user"): o.network.user = next(); break;
         case utils::commandKey("--token"): o.network.token = next(); break;
         case utils::commandKey("--sky"): o.view.sky = detail::parseInteger<int>(arg.name, next()); break;
-        case utils::commandKey("--connect"): o.network.port = detail::parseInteger<int>(arg.name, next()); break; 
+        case utils::commandKey("--connect"): o.network.port = detail::parseInteger<int>(arg.name, next()); break;
         case utils::commandKey("--sky-rotation"): o.view.skyRotation = detail::parseFloat(arg.name, next()); break;
-        case utils::commandKey("--sky-exposure"): o.view.skyExposure = detail::parseFloat(arg.name, next()); break;   
+        case utils::commandKey("--sky-exposure"): o.view.skyExposure = detail::parseFloat(arg.name, next()); break;
         case utils::commandKey("--color"): o.scene.characterColor = parseHexColor(next()); break;
 #endif
         default: throw std::runtime_error("Unknown viewer option: " + std::string(arg.name));

@@ -86,7 +86,7 @@ void alignValueWithLabel() {
  */
 void drawContactResponse(Session& session, const render::Fonts& fonts) {
     auto& world = session.scene.world;
-    drawSliderRows(fonts, 
+    drawSliderRows(fonts,
         {{"Restitution", &world.restitution_unitless, 0, 1, "%.2f", ""},
         {"Friction static", &world.frictionStatic_unitless, 0, 1, "%.2f", ""}}
     );
@@ -191,10 +191,10 @@ void viewDebug(Session& s, const render::Fonts& fonts) {
     render::slider("Orbit", &s.view.camera.yaw, -3.14f, 3.14f, "%.2f", "", fonts);
     render::slider("Elevation", &s.view.camera.pitch, -.4f, 1.2f, "%.2f", "", fonts);
     render::slider(
-        "Zoom", &s.view.camera.distance, s.scene.id == "impact" ? 
-        settings::World::Ui::Physics::Controls::IMPACT_ZOOM_MIN : 
+        "Zoom", &s.view.camera.distance, s.scene.id == "impact" ?
+        settings::World::Ui::Physics::Controls::IMPACT_ZOOM_MIN :
         settings::World::Ui::Physics::Controls::DEFAULT_ZOOM_MIN,
-        settings::World::Ui::Physics::Controls::ZOOM_MAX, 
+        settings::World::Ui::Physics::Controls::ZOOM_MAX,
         "%.0f", "m", fonts
     );
 
@@ -299,11 +299,11 @@ void drawSimulationControls(Session& s, bool& paused, const render::Fonts& fonts
         s.scene = viewerScenario(scenarioId(selected), std::uint64_t(s.spawn.seedInput));
 
         const bool impact = s.scene.id == "impact";
-        s.view.camera.distance = impact ? 
-            settings::World::Ui::Physics::Controls::CAMERA_DISTANCE_IMPACT : 
+        s.view.camera.distance = impact ?
+            settings::World::Ui::Physics::Controls::CAMERA_DISTANCE_IMPACT :
             settings::World::Ui::Physics::Controls::CAMERA_DISTANCE_DEFAULT;
-        s.view.camera.yaw = impact ? 
-            settings::World::Ui::Physics::Controls::CAMERA_YAW_IMPACT : 
+        s.view.camera.yaw = impact ?
+            settings::World::Ui::Physics::Controls::CAMERA_YAW_IMPACT :
             settings::World::Ui::Physics::Controls::CAMERA_YAW_DEFAULT;
 
         resetSession(s);

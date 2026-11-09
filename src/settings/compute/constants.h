@@ -32,9 +32,9 @@ struct Compute {
         static constexpr int BLOCK_SIZE = 128;
         /* Total device memory footprint per simulated body. */
         static constexpr std::size_t BYTES_PER_BODY =
-            7 * sizeof(sim::Vec3) + 
-            sizeof(sim::Quat) + 
-            4 * sizeof(sim::Real) + 
+            7 * sizeof(sim::Vec3) +
+            sizeof(sim::Quat) +
+            4 * sizeof(sim::Real) +
             4 * sizeof(int);
     };
 

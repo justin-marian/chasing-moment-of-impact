@@ -2,7 +2,7 @@
  * @file
  * Render the full-screen background gradient and solid top cap.
  *
- * Interpolates vertically between two paper-like colors and applies a solid 
+ * Interpolates vertically between two paper-like colors and applies a solid
  * color band at the top edge based on the viewport pixel height.
  */
 

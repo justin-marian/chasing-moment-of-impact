@@ -58,7 +58,7 @@ SIM_HD inline ImpactMeasure measureImpact(StateView s, const Contact& ct) {
 
 	// Calculate relative velocity at the contact point and project it onto the normal.
 	Real speed = maximum(0,  -dot(contactVelocity(s, ct.b_i, ct.point_m) - contactVelocity(s, ct.a_i, ct.point_m), ct.normal));
-	
+
 	// Calculate the inverse of the effective mass along the normal.
 	Real inverse = effectiveMassInverse(s, ct, ct.normal);
 	return {speed, /* E = 0.5 * v^2 / m_inv */ inverse > settings::Collisions::Geometry::EPSILON ? HALF * speed * speed / inverse : 0};
@@ -107,10 +107,10 @@ SIM_HD inline void retainImpact(ImpactEvent* slots, const ImpactEvent& event) {
  * @param out     Per-body impact banks sized for all retained events.
  */
 SIM_HD inline void recordImpact(
-	StateView s, 
-	const Contact& ct, 
-	ImpactMeasure measure, 
-	const WorldConfig& c, 
+	StateView s,
+	const Contact& ct,
+	ImpactMeasure measure,
+	const WorldConfig& c,
 	ImpactEvent* out
 ) {
 	// Filter out resting contacts and negligible impacts.
@@ -119,8 +119,8 @@ SIM_HD inline void recordImpact(
 	constexpr Real MIN_IMPULSE_NS = Real(.0001);
 	constexpr Real AXIS_DOMINANCE_THRESHOLD = Real(.5);
 
-	if (measure.closing_mps < MIN_CLOSING_MPS || 
-		measure.energy_J < MIN_ENERGY_J || 
+	if (measure.closing_mps < MIN_CLOSING_MPS ||
+		measure.energy_J < MIN_ENERGY_J ||
 		ct.normalImpulse_Ns <= MIN_IMPULSE_NS) {
 		return;
 	}
@@ -133,8 +133,8 @@ SIM_HD inline void recordImpact(
 	// If this is a wall contact, record the specific face and project the point onto the plane.
 	if (ct.b_i < 0) {
 		// Find the dominant normal axis to determine which wall face was hit.
-		int axis = 
-			absolute(ct.normal.x) > AXIS_DOMINANCE_THRESHOLD ? 0 : 
+		int axis =
+			absolute(ct.normal.x) > AXIS_DOMINANCE_THRESHOLD ? 0 :
 			absolute(ct.normal.y) > AXIS_DOMINANCE_THRESHOLD ? 1 : 2;
 
 		event.wallFace_i = axis * 2 + (ct.normal[axis] > 0 ? 1 : 0);

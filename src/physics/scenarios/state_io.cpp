@@ -71,7 +71,7 @@ Vec3 randomDirection(std::mt19937_64& generator) {
     Real z = randomUnit(generator) * 2 - 1;
     Real phi = randomUnit(generator) * 2 * settings::Collisions::Geometry::PI;
     Real radius = Real(sqrt(maximum(0, 1 - z * z)));
-    
+
     return {radius * Real(cos(phi)), z, radius * Real(sin(phi))};
 }
 
@@ -102,11 +102,11 @@ bool spawnRandom(State& state, Shape shape, const Scenario& scenario, std::mt199
 
     Vec3 axis = randomDirection(generator);
     Real half = randomUnit(generator) * settings::Collisions::Geometry::PI;
-    
+
     body.orientation = normalize({
-        axis.x * Real(sin(half)), 
-        axis.y * Real(sin(half)), 
-        axis.z * Real(sin(half)), 
+        axis.x * Real(sin(half)),
+        axis.y * Real(sin(half)),
+        axis.z * Real(sin(half)),
         Real(cos(half))
     });
 
@@ -116,13 +116,13 @@ bool spawnRandom(State& state, Shape shape, const Scenario& scenario, std::mt199
     /* Attempt random positions until a non-overlapping slot is found. */
     for (int attempt = 0; attempt < 10000; ++attempt) {
         body.position_m = {
-            (randomUnit(generator) * 2 - 1) * range.x, 
+            (randomUnit(generator) * 2 - 1) * range.x,
             (randomUnit(generator) * 2 - 1) * range.y,
             (randomUnit(generator) * 2 - 1) * range.z
         };
 
         if (scenario.staggeredSpawn && attempt < StaggeredSpawn::PREFERRED_ATTEMPTS) {
-            /* 
+            /*
              * Alternate height bands so bodies reach the floor at different times.
              * Start closer together horizontally, then fall back to the full box
              * if the preferred region is crowded.
@@ -241,7 +241,7 @@ std::string hashText(std::string_view text) {
  */
 void saveState(const std::filesystem::path& path, const State& state) {
     Json json = {
-        {"tick_i", state.tick_i}, 
+        {"tick_i", state.tick_i},
         {"bodies", Json::array()}
     };
 
@@ -251,8 +251,8 @@ void saveState(const std::filesystem::path& path, const State& state) {
             {"velocity_mps", vectorJson(state.velocity_mps[i])},
             {"angularVelocity_rad_s", vectorJson(state.angularVelocity_rad_s[i])},
             {"orientation", Json::array({
-                state.orientation[i].x, 
-                state.orientation[i].y, 
+                state.orientation[i].x,
+                state.orientation[i].y,
                 state.orientation[i].z,
                 state.orientation[i].w
             })},
@@ -302,9 +302,9 @@ State loadState(const std::filesystem::path& path) {
 
         const auto& q = value.at("orientation");
         body.orientation = {
-            q.at(0).get<Real>(), 
-            q.at(1).get<Real>(), 
-            q.at(2).get<Real>(), 
+            q.at(0).get<Real>(),
+            q.at(1).get<Real>(),
+            q.at(2).get<Real>(),
             q.at(3).get<Real>()
         };
 
@@ -346,18 +346,18 @@ void printMotion(const std::filesystem::path& path, const State& state) {
         auto velocity = state.velocity_mps[i];
         auto angular = state.angularVelocity_rad_s[i];
 
-        out << state.tick_i 
-            << ',' << i 
-            << ',' << state.shape_i[i] 
-            << ',' << position.x 
+        out << state.tick_i
+            << ',' << i
+            << ',' << state.shape_i[i]
+            << ',' << position.x
             << ',' << position.y
-            << ',' << position.z 
-            << ',' << velocity.x 
-            << ',' << velocity.y 
-            << ',' << velocity.z 
-            << ',' << angular.x 
-            << ',' << angular.y 
-            << ',' << angular.z 
+            << ',' << position.z
+            << ',' << velocity.x
+            << ',' << velocity.y
+            << ',' << velocity.z
+            << ',' << angular.x
+            << ',' << angular.y
+            << ',' << angular.z
             << '\n';
     }
 }

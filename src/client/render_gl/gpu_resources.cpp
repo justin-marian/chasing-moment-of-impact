@@ -90,7 +90,7 @@ std::string loadShaderSource(const std::filesystem::path& entry) {
 			++number;
 			const auto first = line.find_first_not_of(" \t\r");
 			const auto directive = first == std::string::npos ? std::string() : line.substr(first);
-			
+
 			if (directive.starts_with("#pragma once")) {
 				continue;
 			}
@@ -102,12 +102,12 @@ std::string loadShaderSource(const std::filesystem::path& entry) {
 			if (directive.starts_with("#include")) {
 				const auto begin = directive.find('"');
 				const auto end = directive.find('"', begin == std::string::npos ? begin : begin + 1);
-				
+
 				if (begin == std::string::npos || end == std::string::npos) {
 					throw std::runtime_error("Malformed GLSL include in " + path.string());
 				}
 
-				output 
+				output
                     << "\n#line 1\n"
                     << expand(path.parent_path() / directive.substr(begin + 1, end - begin - 1), depth + 1)
                     << "\n#line " << number + 1 << '\n';
@@ -170,13 +170,13 @@ std::filesystem::path asset(std::string_view relative) {
  */
 GLuint loadShader(GLenum stage, const std::string& file) {
 	auto source = loadShaderSource(asset("src/client/render_gl/shaders/" + file));
-	
+
 	// GLSL allows a comment header before the version directive.
 	const auto version = source.starts_with("#version ") ? 0 : source.find("\n#version ");
 	if (version == std::string::npos) {
 		throw std::runtime_error("Shader has no version directive: " + file);
 	}
-	
+
 	const auto lineEnd = source.find('\n', version == 0 ? 0 : version + 1);
 	source.insert(lineEnd + 1, shaderSettings());
 	const char* code = source.c_str();
@@ -214,7 +214,7 @@ GLuint linkProgram(const std::string& vertex, const std::string& fragment) {
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
 	glLinkProgram(program);
-	
+
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
@@ -268,7 +268,7 @@ void uniform(GLuint p, const char* name, glm::vec3 value) {
 glm::vec3 linear(unsigned hex) {
 	auto c = rgb(hex);
 	glm::vec3 v(c.x, c.y, c.z);
-	
+
 	for (int i = 0; i < 3; ++i) {
 		if (v[i] <= .04045f) {
 			v[i] = v[i] / 12.92f;
@@ -276,7 +276,7 @@ glm::vec3 linear(unsigned hex) {
 			v[i] = std::pow((v[i] + .055f) / 1.055f, 2.4f);
 		}
 	}
-	
+
 	return v;
 }
 
@@ -365,7 +365,7 @@ void initializeContext(Renderer::Impl& state, bool visible, int width, int heigh
  * @param state Renderer state to populate.
  */
 void initializePrograms(Renderer::Impl& state) {
-	/* 
+	/*
 	 * Shared vertex shader with per-pass fragment shaders: the body
 	 * fragment drives the bodies themselves, the wall/floor/shadow variants
 	 * are alternative surface treatments over the same vertex stage.
@@ -387,9 +387,9 @@ void initializePrograms(Renderer::Impl& state) {
 	glGenBuffers(1, &state.impactBuffer);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, state.impactBuffer);
 	glBufferData(
-		GL_SHADER_STORAGE_BUFFER, 
+		GL_SHADER_STORAGE_BUFFER,
 		static_cast<GLsizeiptr>(state.impactData.size() * sizeof(ImpactGpu)),
-		nullptr, 
+		nullptr,
 		GL_STREAM_DRAW
 	);
 }
@@ -462,11 +462,11 @@ void initializeInterface(Renderer::Impl& state) {
 	auto load = [&](const char* file, float sizePx) {
 		const auto path = asset(std::string(settings::World::Ui::Font::Resources::FONT_DIRECTORY) + file);
 		auto* face = io.Fonts->AddFontFromFileTTF(path.string().c_str(), sizePx, &config);
-		
+
 		if (!face) {
 			throw std::runtime_error("Cannot load font " + path.string());
 		}
-		
+
 		return face;
 	};
 
@@ -525,7 +525,7 @@ void packImpactPatches(std::vector<ImpactGpu>& out, const ImpactHistory& impacts
 	for (int i = 0; i < bodyCount; ++i) {
 		packBank(out, i, impacts, impacts.body(i));
 	}
-	
+
 	for (int face = 0; face < 6; ++face) {
 		packBank(out, settings::Collisions::Storage::MAX_BODIES + face, impacts, impacts.wall(face));
 	}

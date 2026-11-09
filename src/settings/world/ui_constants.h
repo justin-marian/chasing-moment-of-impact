@@ -42,7 +42,7 @@ struct World::Ui {
 
         /* Native scalar tracks have two logical pixels of inner padding at each endpoint. */
         static constexpr float NATIVE_PADDING = 2;
-        
+
         static constexpr unsigned TRACK = 0xD2D2CF, FILL = 0x96AFCB;
         static constexpr unsigned HANDLE = 0xFFFFFF, OUTLINE = 0xE2E4E7, SHADOW = 0x87909A;
         static constexpr std::size_t FORMAT_CAPACITY = 64;
@@ -237,7 +237,7 @@ struct World::Ui {
             /* Heat legend dimensions in logical pixels; palette runs from weak blue to violent red. */
             inline static constexpr float HEAT_SEGMENT_WIDTH = 65.f;
             inline static constexpr float HEIGHT = 12.f;
-            
+
             inline static constexpr ImU32 COLORS[] = {
                 IM_COL32(4, 6, 122, 255),   /* Dark blue */
                 IM_COL32(5, 161, 224, 255), /* Light blue */
@@ -248,13 +248,13 @@ struct World::Ui {
 
             /* Menu order must agree with the corresponding scenario/shape selection switches. */
             inline static constexpr const char* NAMES[] = {
-                "Matrix A / 850", 
-                "Matrix B / 1750",      
+                "Matrix A / 850",
+                "Matrix B / 1750",
                 "Matrix C / 4000",
-                "Custom / 120",   
+                "Custom / 120",
                 "Impact strength test"
             };
-            
+
             inline static constexpr const char* SHAPES[] = {"Sphere", "Cube", "Cylinder", "Cone"};
         };
     };

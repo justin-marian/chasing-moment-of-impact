@@ -15,7 +15,7 @@ namespace {
  */
 __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void applyForcesKernel(StateView s, WorldConfig c) {
 	int i = int(blockIdx.x * blockDim.x + threadIdx.x);
-	
+
 	if (i < s.count_i) {
 		applyForces(s, i, c);
 	}

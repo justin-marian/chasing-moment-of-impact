@@ -68,7 +68,7 @@ public:
      * @param distance_m Distance from the camera to its focus point, in metres.
      */
     void draw(
-        const sim::State& state, const sim::WorldConfig& config, 
+        const sim::State& state, const sim::WorldConfig& config,
         float yaw_rad, float pitch_rad, float distance_m
     );
 

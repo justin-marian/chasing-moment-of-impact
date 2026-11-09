@@ -49,8 +49,8 @@ bool button(const char* name, float width, bool primary = false);
  * @return True when dragging, navigation or numeric input changes the value.
  */
 bool slider(
-    const char* name, float* value, 
-    float low, float high, 
+    const char* name, float* value,
+    float low, float high,
     const char* format, const char* unit,
     const Fonts& fonts
 );

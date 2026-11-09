@@ -42,7 +42,7 @@ void tri(std::vector<Vertex>& out, const Vertex& a, const Vertex& b, const Verte
  * Generate a standard unit quad centered at the origin facing the +Z axis.
  *
  * A quad is universally constructed as two adjacent triangles sharing a diagonal.
- * 
+ *
  * @see Unity Manual: Create a quad mesh via script
  *      https://docs.unity3d.com/7000.0/Documentation/Manual/Example-CreatingaBillboardPlane.html
  *
@@ -71,7 +71,7 @@ std::vector<Vertex> makeQuad() {
  * This produces a rounded silhouette without changing the unit extents required
  * by collision detection. This technique is commonly referred to as vertex
  * snapping or normal-based extrusion on a subdivided block.
- * 
+ *
  * @see Procedural Rounded Cube Generation
  *      https://www.coursera.org/learn/unity-design-deform-meshes-3d-geometry-control
  *
@@ -108,7 +108,7 @@ std::vector<Vertex> makeCube(bool rounded) {
                         // Snap to the inner core, calculate the outward normal, then extrude.
                         glm::vec3 core = glm::clamp(p, glm::vec3(-CORE_EXTENT), glm::vec3(CORE_EXTENT));
                         glm::vec3 normal = glm::normalize(p - core);
-                        
+
                         return Vertex{
                             core + ROUNDING_OFFSET * normal,
                             normal,
@@ -124,7 +124,7 @@ std::vector<Vertex> makeCube(bool rounded) {
                     auto b = vertex(i + 1, j);
                     auto c = vertex(i + 1, j + 1);
                     auto d = vertex(i, j + 1);
-                    
+
                     // Emit 2 triangles per grid cell (CCW winding to face outward).
                     tri(out, a, b, c);
                     tri(out, a, c, d);
@@ -145,10 +145,10 @@ std::vector<Vertex> makeCube(bool rounded) {
  * silhouette at typical camera distances. Each subdivision level splits every
  * triangle into four smaller triangles and projects the new vertices to the
  * unit sphere.
- * 
+ *
  * @see Geodesic Icosahedron (Recursive Subdivision)
  *      https://pypi.org/project/icosphere/
- * 
+ *
  * @see Creating an icosphere mesh in code (Andreas Kahler)
  *      http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
  *
@@ -156,7 +156,7 @@ std::vector<Vertex> makeCube(bool rounded) {
  */
 std::vector<Vertex> makeSphere() {
     constexpr int SUBDIVISION_LEVELS = 3;
-    
+
     // Golden ratio used to determine the 12 vertices of the base icosahedron.
     float t = (1 + std::sqrt(5.0f)) / 2;
     std::array<glm::vec3, 12> points = {
@@ -168,7 +168,7 @@ std::vector<Vertex> makeSphere() {
     std::vector<std::array<glm::vec3, 3>> triangles;
     for (auto& face : settings::World::Rendering::Meshes::FACES) {
         triangles.push_back({
-            glm::normalize(points[face[0]]), 
+            glm::normalize(points[face[0]]),
             glm::normalize(points[face[1]]),
             glm::normalize(points[face[2]])
         });
@@ -177,25 +177,25 @@ std::vector<Vertex> makeSphere() {
     // Subdivide each triangle into 4 smaller triangles and project to the sphere surface.
     for (int level = 0; level < SUBDIVISION_LEVELS; ++level) {
         std::vector<std::array<glm::vec3, 3>> next;
-        
+
         for (auto& f : triangles) {
             auto a = glm::normalize(f[0] + f[1]);
             auto b = glm::normalize(f[1] + f[2]);
             auto c = glm::normalize(f[2] + f[0]);
-            
+
             next.push_back({f[0], a, c});
             next.push_back({f[1], b, a});
             next.push_back({f[2], c, b});
             next.push_back({a, b, c});
         }
-        
+
         triangles = std::move(next);
     }
 
     std::vector<Vertex> out;
     for (auto& f : triangles) {
         std::array<Vertex, 3> v;
-        
+
         // Map Cartesian coordinates to spherical UVs (longitude/latitude).
         for (int i = 0; i < 3; ++i) {
             v[i] = {
@@ -212,7 +212,7 @@ std::vector<Vertex> makeSphere() {
         // streak across the seam.
         float low = std::min({v[0].uv.x, v[1].uv.x, v[2].uv.x});
         float high = std::max({v[0].uv.x, v[1].uv.x, v[2].uv.x});
-        
+
         if (high - low > .5f) {
             for (auto& p : v) {
                 if (p.uv.x < .5f) {
@@ -234,10 +234,10 @@ std::vector<Vertex> makeSphere() {
  * Both share the ring construction: the ring profile differs only in whether
  * the top ring has radius 1 (cylinder) or 0 (cone apex). This ring-based
  * approach is standard across modern engines.
- * 
+ *
  * @see Godot Engine: CylinderMesh
  *      https://docs.godotengine.org/en/4.0/classes/class_cylindermesh.html
- * 
+ *
  * @see Babylon.js: Mesh Generators
  *      https://github.com/babylonjs/babylon-lite/blob/91f1be782f9446bebfc2d148edf0c4f691b04446/docs/lite/architecture/10-mesh-generators.md
  *
@@ -270,7 +270,7 @@ std::vector<Vertex> makeRoundMesh(bool cone) {
                 } else if (!cone && k + 1 == rings.size()) {
                     n = glm::normalize(n + glm::vec3(0, 1, 0));
                 }
-                
+
                 return Vertex{
                     {ring.x * std::cos(angle), ring.y, ring.x * std::sin(angle)},
                     glm::normalize(n),
@@ -304,7 +304,7 @@ std::vector<Vertex> makeRoundMesh(bool cone) {
         };
 
         tri(out, {{0, -1, 0}, {0, -1, 0}, {.5f, .5f}}, loB, loA);
-        
+
         // Top cap: only for the cylinder; the cone has an apex instead,
         // produced by the last ring pair above.
         if (!cone) {
@@ -330,19 +330,19 @@ InstancedMesh::InstancedMesh(const std::vector<Vertex>& vertices) {
     count = static_cast<GLsizei>(vertices.size());
 
     glBindVertexArray(vao);
-    
+
     // --- Static Mesh Data ---
     glBindBuffer(GL_ARRAY_BUFFER, vertex);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
-    
+
     // Map the Vertex struct fields (position, normal, UVs) to shader attribute locations 0-3.
     for (GLuint i = 0; i < 4; ++i) {
         glEnableVertexAttribArray(i);
-        std::size_t offset = 
-            i == 0 ? offsetof(Vertex, p) : 
-            i == 1 ? offsetof(Vertex, n) : 
+        std::size_t offset =
+            i == 0 ? offsetof(Vertex, p) :
+            i == 1 ? offsetof(Vertex, n) :
             i == 2 ? offsetof(Vertex, uv) : offsetof(Vertex, uv1);
-            
+
         // Position and Normal are vec3 (3 floats); UVs are vec2 (2 floats).
         glVertexAttribPointer(i, i < 2 ? 3 : 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offset));
     }
@@ -350,7 +350,7 @@ InstancedMesh::InstancedMesh(const std::vector<Vertex>& vertices) {
     // --- Instanced Data ---
     glBindBuffer(GL_ARRAY_BUFFER, instances);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Instance) * settings::Collisions::Storage::MAX_BODIES, nullptr, GL_STREAM_DRAW);
-    
+
     // Map the world matrix (mat4) to attribute locations 4-7.
     for (GLuint i = 0; i < 4; ++i) {
         glEnableVertexAttribArray(4 + i);
@@ -396,7 +396,7 @@ void InstancedMesh::draw(const std::vector<Instance>& data) {
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, instances);
-    
+
     // Overwrite the previous frame's instance data without reallocating the buffer.
     glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(data.size() * sizeof(Instance)), data.data());
     // Draw 'count' vertices, repeating the operation 'data.size()' times (once per instance).
@@ -517,7 +517,7 @@ void SkinnedMesh::draw() const {
  */
 animation::Primitive cube() {
     animation::Primitive result;
-    
+
     for (const auto& vertex : render::makeCube(false)) {
         animation::Vertex converted;
         converted.position = vertex.p;
@@ -527,7 +527,7 @@ animation::Primitive cube() {
         result.indices.push_back(static_cast<std::uint32_t>(result.vertices.size()));
         result.vertices.push_back(converted);
     }
-    
+
     return result;
 }
 

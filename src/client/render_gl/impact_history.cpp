@@ -29,7 +29,7 @@ void ImpactHistory::insert(Slots& slots, const ImpactPatch& patch) {
     for (auto& p : slots) {
         /* Nearby manifold points represent one physical hot region. */
         if (
-            p.energy_J > 0 && 
+            p.energy_J > 0 &&
             sim::dot(p.normal, patch.normal) > settings::World::Rendering::Impacts::History::MERGE_NORMAL_DOT &&
             sim::length(p.point_m - patch.point_m) < patch.radius_m * settings::World::Rendering::Impacts::History::MERGE_RADIUS_FRACTION
         ) {
@@ -85,7 +85,7 @@ float ImpactHistory::strength(const ImpactPatch& patch) const {
     }
 
     float energy = std::clamp(std::log1p(patch.energy_J) / std::log1p(redEnergy_J), 0.f, UNIT_RANGE);
-    
+
     return energy * std::pow(
         std::max(0.f, 1 - patch.age_s / lifetime_s),
         settings::World::Rendering::Impacts::History::DECAY_EXPONENT
@@ -118,7 +118,7 @@ void ImpactHistory::advance(const sim::State& state, std::span<const sim::Impact
     for (int i = 0; i < state.count_i; ++i) {
         age(bodies[std::size_t(i)]);
     }
-    
+
     for (auto& wall : walls) {
         age(wall);
     }
@@ -127,7 +127,7 @@ void ImpactHistory::advance(const sim::State& state, std::span<const sim::Impact
         for (int k = 0; k < settings::Collisions::Impacts::EVENTS_PER_BODY; ++k) {
             std::size_t index =
                 std::size_t(i) * settings::Collisions::Impacts::EVENTS_PER_BODY + std::size_t(k);
-                
+
             if (index >= events.size()) {
                 break;
             }
@@ -142,13 +142,13 @@ void ImpactHistory::advance(const sim::State& state, std::span<const sim::Impact
             float peak = std::clamp(std::log1p(event.energy_J) / std::log1p(redEnergy_J), 0.f, UNIT_RANGE);
 
             ImpactPatch patch{
-                event.localPoint_m, 
-                event.localNormal, 
-                event.energy_J, 
+                event.localPoint_m,
+                event.localNormal,
+                event.energy_J,
                 PATCH_AGE_START,
                 std::clamp(
                     size * (
-                        settings::World::Rendering::Impacts::History::PATCH_RADIUS_BASE + 
+                        settings::World::Rendering::Impacts::History::PATCH_RADIUS_BASE +
                         settings::World::Rendering::Impacts::History::PATCH_RADIUS_SLOPE * std::sqrt(peak)
                     ),
                     settings::World::Rendering::Impacts::History::PATCH_RADIUS_MIN_M,

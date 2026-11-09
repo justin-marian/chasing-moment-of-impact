@@ -18,10 +18,10 @@ namespace {
  * for parallel resolution without data races.
  */
 __global__ void colorContactsKernel(
-	StateView s, Contact* contacts, 
-    const int* counts, std::uint32_t* masks, 
+	StateView s, Contact* contacts,
+    const int* counts, std::uint32_t* masks,
     int* colors, int* indices,
-	int* colorCounts, int* offsets, int* number, 
+	int* colorCounts, int* offsets, int* number,
     int* overflow
 ) {
 	*number = colorContacts(s, contacts, counts, masks, colors, indices, colorCounts, offsets);
@@ -38,7 +38,7 @@ __global__ void colorContactsKernel(
  * Kernel to execute the iterative constraint solver over the colored contacts.
  */
 __global__ void solveContactsKernel(
-	StateView s, WorldConfig c, Contact* contacts, 
+	StateView s, WorldConfig c, Contact* contacts,
     const int* indices, const int* offsets, const int* number,
 	ImpactMeasure* measures, ImpactEvent* impacts
 ) {
@@ -109,7 +109,7 @@ __global__ void solveContactsKernel(
  */
 void CudaBackend::solver(StateView s, const WorldConfig& c) {
 	colorContactsKernel<<<1, 1, 0, stream.value>>>(
-		s, contacts.ptr, contactCounts.ptr, 
+		s, contacts.ptr, contactCounts.ptr,
         colorMasks.ptr, colors.ptr, coloredIndices.ptr, colorCounts.ptr,
 		colorOffsets.ptr, colorNumber.ptr, overflow.ptr
 	);
@@ -117,7 +117,7 @@ void CudaBackend::solver(StateView s, const WorldConfig& c) {
 
 	solveContactsKernel<<<1, settings::Compute::Cuda::BLOCK_SIZE, 0, stream.value>>>(
 		s, c, contacts.ptr, coloredIndices.ptr, colorOffsets.ptr, colorNumber.ptr,
-		trackImpacts ? impactMeasures->ptr : nullptr, 
+		trackImpacts ? impactMeasures->ptr : nullptr,
         trackImpacts ? impactEvents->ptr : nullptr
 	);
 	CUDA_CHECK(cudaGetLastError());

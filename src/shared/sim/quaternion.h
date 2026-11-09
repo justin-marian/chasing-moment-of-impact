@@ -26,9 +26,9 @@ struct Quat {
      */
     SIM_HD Quat operator*(Quat b) const {
         return {
-            w * b.x + x * b.w + y * b.z - z * b.y, 
+            w * b.x + x * b.w + y * b.z - z * b.y,
             w * b.y - x * b.z + y * b.w + z * b.x,
-            w * b.z + x * b.y - y * b.x + z * b.w, 
+            w * b.z + x * b.y - y * b.x + z * b.w,
             w * b.w - x * b.x - y * b.y - z * b.z
         };
     }

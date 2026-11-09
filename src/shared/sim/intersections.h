@@ -31,11 +31,11 @@ struct Aabb { Vec3 min_m, max_m; };
  */
 SIM_HD inline bool intersects(Aabb a, Aabb b) {
     return (
-        a.min_m.x <= b.max_m.x && 
-        a.max_m.x >= b.min_m.x && 
+        a.min_m.x <= b.max_m.x &&
+        a.max_m.x >= b.min_m.x &&
         a.min_m.y <= b.max_m.y &&
-        a.max_m.y >= b.min_m.y && 
-        a.min_m.z <= b.max_m.z && 
+        a.max_m.y >= b.min_m.y &&
+        a.min_m.z <= b.max_m.z &&
         a.max_m.z >= b.min_m.z
     );
 }
@@ -53,20 +53,20 @@ SIM_HD inline bool intersects(Aabb a, Aabb b) {
 SIM_HD inline bool rayTriangle(Vec3 origin_m, Vec3 direction, Triangle t, Real& distance_m) {
     Vec3 e1 = t.b_m - t.a_m, e2 = t.c_m - t.a_m, h = cross(direction, e2);
     Real det = dot(e1, h);
-    
+
     if (absolute(det) < settings::Collisions::Geometry::EPSILON)
         return false;
 
     Real inv = 1 / det;
     Vec3 s = origin_m - t.a_m;
     Real u = dot(s, h) * inv;
-    
+
     if (u < 0 || u > 1)
         return false;
 
     Vec3 q = cross(s, e1);
     Real v = dot(direction, q) * inv;
-    
+
     if (v < 0 || u + v > 1)
         return false;
 
@@ -114,7 +114,7 @@ SIM_HD inline bool triangleTriangle(Triangle a, Triangle b) {
 
     if (dot(an, an) < EPSILON_SQ || dot(bn, bn) < EPSILON_SQ)
         return false;
-        
+
     if (separatesTriangles(an, a, b) || separatesTriangles(bn, a, b))
         return false;
 
@@ -122,13 +122,13 @@ SIM_HD inline bool triangleTriangle(Triangle a, Triangle b) {
         if (separatesTriangles(cross(an, ae[i]), a, b) || separatesTriangles(cross(bn, be[i]), a, b)) {
             return false;
         }
-        
+
         for (int j = 0; j < 3; ++j) {
             if (separatesTriangles(cross(ae[i], be[j]), a, b))
                 return false;
         }
     }
-    
+
     return true;
 }
 

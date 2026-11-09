@@ -22,21 +22,21 @@ namespace sim {
  * Initialize the CUDA backend by allocating all GPU/host memory and querying device hardware.
  *
  * This constructor pre-allocates every buffer required for the simulation lifecycle.
- * By satisfying all memory requirements upfront, the fixed-step execution pipeline 
+ * By satisfying all memory requirements upfront, the fixed-step execution pipeline
  * guarantees zero allocations on the hot path.
  *
  * Key architectural allocations:
  * - **SoA Storage:** Allocates the primary structure-of-arrays for body kinematics and dynamics.
- * - **Contiguous Flattening:** Candidate and contact buffers are allocated as single, massive 
+ * - **Contiguous Flattening:** Candidate and contact buffers are allocated as single, massive
  *   1D arrays to ensure coalesced memory access on the GPU, avoiding pointer-chasing.
- * - **Pinned Host Memory:** Allocates page-locked (pinned) host buffers to allow 
+ * - **Pinned Host Memory:** Allocates page-locked (pinned) host buffers to allow
  *   asynchronous DMA transfers over PCIe at maximum bandwidth.
- * - **Dynamic CUB Scratch:** Queries the exact temporary-storage requirement for the 
+ * - **Dynamic CUB Scratch:** Queries the exact temporary-storage requirement for the
  *   broad-phase radix sort, then allocates the precise byte count needed.
  *
  * @param capacity Maximum number of bodies allocated by this owner.
  */
-CudaBackend::CudaBackend(int capacity) : 
+CudaBackend::CudaBackend(int capacity) :
 	// Core execution state.
 	capacity(capacity),
 	storage(capacity), // Primary SoA arrays (pos, vel, mass).
@@ -81,9 +81,9 @@ CudaBackend::CudaBackend(int capacity) :
 
 	// Query required scratch bytes for CUB Radix Sort.
 	CUDA_CHECK(cub::DeviceRadixSort::SortPairs(
-		nullptr, scratchBytes, 
-		keysIn.ptr, keysOut.ptr, 
-		idsIn.ptr, idsOut.ptr, 
+		nullptr, scratchBytes,
+		keysIn.ptr, keysOut.ptr,
+		idsIn.ptr, idsOut.ptr,
 		capacity, 0, 64,
 		stream.value
 	));
@@ -196,8 +196,8 @@ void CudaBackend::setImpactTracking(bool enabled) {
  * @return Borrowed retained impact data; its lifetime follows the owning backend/renderer.
  */
 std::span<const ImpactEvent> CudaBackend::impacts() const {
-	return trackImpacts ? 
-    std::span<const ImpactEvent>(hostImpacts->ptr, std::size_t(count) * settings::Collisions::Impacts::EVENTS_PER_BODY) : 
+	return trackImpacts ?
+    std::span<const ImpactEvent>(hostImpacts->ptr, std::size_t(count) * settings::Collisions::Impacts::EVENTS_PER_BODY) :
     std::span<const ImpactEvent>{};
 }
 
@@ -252,7 +252,7 @@ StepResult CudaBackend::step(State& state, const WorldConfig& config) {
 	auto mark = [&](int stage) {  CUDA_CHECK(cudaEventRecord(events[stage].value, stream.value)); };
 
 	// Event boundaries mirror configured stage names and the CPU timing sequence exactly.
-	mark(0); 
+	mark(0);
 	forces(view, config); mark(1);
 	velocity(view, config); mark(2);
 	bounds(view); mark(3);
@@ -265,7 +265,7 @@ StepResult CudaBackend::step(State& state, const WorldConfig& config) {
 	diagnostics(view, config); mark(10);
 
 	CUDA_CHECK(cudaMemcpyAsync(
-        hostDiagnostics.ptr, diagnosticsBuffer.ptr, 
+        hostDiagnostics.ptr, diagnosticsBuffer.ptr,
         sizeof(Diagnostics),
         cudaMemcpyDeviceToHost, stream.value
     ));

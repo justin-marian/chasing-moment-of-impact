@@ -42,9 +42,9 @@ uniform vec3 uKeyColor;       // Linear-light RGB color.
 uniform float uKeyIntensity;  // Brightness multiplier.
 
 /* --- Fill Light (Softer, opposing light) --- */
-uniform vec3 uFillDir;        
-uniform vec3 uFillColor;      
-uniform float uFillIntensity; 
+uniform vec3 uFillDir;
+uniform vec3 uFillColor;
+uniform float uFillIntensity;
 
 /* --- Rim Light (Backlight for edge separation) --- */
 uniform vec3 uRimDir;
@@ -89,7 +89,7 @@ float impactHeatAll(int idx, vec3 local, vec3 localN, bool enabled) {
 		// Overlapping patches: take the maximum heat to avoid double-brightening.
 		heat = max(heat, impactHeat(patches.entries[i].pointRadius, patches.entries[i].normalStrength, local, n));
 	}
-	
+
 	return heat;
 }
 
@@ -97,7 +97,7 @@ float impactHeatAll(int idx, vec3 local, vec3 localN, bool enabled) {
 void main() {
 	// Surface response controls the broadness of the specular highlight (lower = sharper).
 	float surfaceResponse = WORLD.BODIES.SURFACE_RESPONSE;
-	
+
 	// Prepare normalized basis vectors for the lighting calculations.
 	vec3 N = normalize(worldNormal);
 	vec3 V = normalize(uCameraPos_m - worldPosition_m);
@@ -110,29 +110,29 @@ void main() {
 
 	// Blend the per-instance flash with the global contact flash (e.g., for wall hits).
 	float flash = max(uContactFlash, visual.y);
-	
+
 	// Modulate the specular exponent (tighter highlight) and intensity based on the flash.
 	float spec = pow(
-        max(dot(N, H_key), 0.0), 
+        max(dot(N, H_key), 0.0),
         (1.0 - WORLD.BODIES.FLASH_HIGHLIGHT_MOD * flash) / surfaceResponse) *
 		(1.0 - surfaceResponse * WORLD.BODIES.FLASH_SPEC_MOD);
 
 	// Sum the diffuse contributions (N dot L) of the three directional lights.
-	vec3 diffuse = 
+	vec3 diffuse =
 		uKeyColor * uKeyIntensity * max(dot(N, L_key), 0.0) +
 		uFillColor * uFillIntensity * max(dot(N, L_fill), 0.0) +
 		uRimColor * uRimIntensity * max(dot(N, L_rim), 0.0);
-		
+
 	// Hemispherical ambient light: blend sky and ground colors based on normal orientation.
 	vec3 ambient = mix(uAmbientGround, uAmbientSky, N.y * 0.5 + 0.5) * uAmbientIntensity * ao;
-	
+
 	// Fresnel rim effect using the Schlick approximation (stronger at grazing angles).
-	float fresnel = 
+	float fresnel =
 		WORLD.BODIES.FRESNEL_F0 +
 		(1.0 - WORLD.BODIES.FRESNEL_F0) * pow(1.0 - max(dot(N, V), 0.0), WORLD.BODIES.FRESNEL_SCHLICK);
 
 	// Combine surface albedo with lighting, then add specular and fresnel highlights.
-	vec3 result = 
+	vec3 result =
 		linearColor(color.rgb) * (diffuse + ambient) +
 		uKeyColor * spec * WORLD.BODIES.SPEC_STRENGTH +
 		vec3(1.0) * fresnel * WORLD.BODIES.FRESNEL_STRENGTH;

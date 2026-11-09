@@ -23,7 +23,7 @@ namespace sim {
  */
 void CpuBackend::solver(StateView state, const WorldConfig& config) {
 	int colorCount = colorContacts(
-		state, contacts.data(), contactCounts.data(), 
+		state, contacts.data(), contactCounts.data(),
         colorMasks.data(), colors.data(), coloredIndices.data(),
 		colorCounts.data(), colorOffsets.data()
 	);

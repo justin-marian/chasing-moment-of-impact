@@ -56,9 +56,9 @@ SIM_HD inline std::uint64_t cellKey(int x, int y, int z) {
  */
 SIM_HD inline std::uint64_t bodyCellKey(StateView s, int i, const WorldConfig& c) {
     Vec3 p = s.position_m[i];
-    
+
     return cellKey(
-        cellCoordinate(p.x, c.cellSize_m), 
+        cellCoordinate(p.x, c.cellSize_m),
         cellCoordinate(p.y, c.cellSize_m),
         cellCoordinate(p.z, c.cellSize_m)
     );
@@ -75,18 +75,18 @@ SIM_HD inline std::uint64_t bodyCellKey(StateView s, int i, const WorldConfig& c
  */
 SIM_HD inline int findCellBegin(const std::uint64_t* keys, int count, std::uint64_t key) {
     int low = 0, high = count;
-    
+
     // Standard binary search for the lower bound.
     while (low < high) {
         int mid = (low + high) / 2;
-        
+
         if (keys[mid] < key) {
             low = mid + 1;
         } else {
             high = mid;
         }
     }
-    
+
     return low;
 }
 
@@ -111,22 +111,22 @@ SIM_HD inline int findCellBegin(const std::uint64_t* keys, int count, std::uint6
  * @return Number of candidate IDs written.
  */
 SIM_HD inline int gatherCandidates(
-    StateView s, 
-    int i, 
-    const WorldConfig& c, 
-    Real dt_s, 
-    Real maxRadius_m, 
+    StateView s,
+    int i,
+    const WorldConfig& c,
+    Real dt_s,
+    Real maxRadius_m,
     Real maxSpeed_mps,
-    const std::uint64_t* keys, 
-    const int* ids, 
-    int* candidates, 
+    const std::uint64_t* keys,
+    const int* ids,
+    int* candidates,
     int& overflow
 ) {
     constexpr int MIN_SPAN = 1;
 
     Vec3 p = s.position_m[i];
     int xyz[3] = {
-        cellCoordinate(p.x, c.cellSize_m), 
+        cellCoordinate(p.x, c.cellSize_m),
         cellCoordinate(p.y, c.cellSize_m),
         cellCoordinate(p.z, c.cellSize_m)
     };
@@ -144,13 +144,13 @@ SIM_HD inline int gatherCandidates(
     }
 
     int count = 0;
-    
+
     // Iterate over the 3D neighborhood of grid cells.
     for (int z = -span; z <= span; ++z) {
         for (int y = -span; y <= span; ++y) {
             for (int x = -span; x <= span; ++x) {
                 std::uint64_t key = cellKey(xyz[0] + x, xyz[1] + y, xyz[2] + z);
-                
+
                 // Find the first entry in the sorted array for this specific cell.
                 int start = findCellBegin(keys, s.count_i, key);
                 for (int k = start; k < s.count_i && keys[k] == key; ++k) {
@@ -182,7 +182,7 @@ SIM_HD inline int gatherCandidates(
             }
         }
     }
-    
+
     return count;
 }
 

@@ -167,9 +167,9 @@ int runSimulation(sim::Backend& backend, const Options& options) {
 
     log.finish(state);
 
-    std::cout 
-        << backend.name() << ": " 
-        << state.count_i << " bodies, " << state.tick_i << " ticks, " 
+    std::cout
+        << backend.name() << ": "
+        << state.count_i << " bodies, " << state.tick_i << " ticks, "
         << "hash="  << sim::hashState(state) << ", escapeFrames=" << escapeFrames
         << ", output=" << options.output.string() << '\n';
 

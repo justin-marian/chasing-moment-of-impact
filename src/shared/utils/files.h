@@ -49,7 +49,7 @@ inline std::filesystem::path findAsset(std::string_view relative, const std::fil
 
     if (std::filesystem::exists(sourceRoot / relative))
         return sourceRoot / relative;
-        
+
     throw std::runtime_error("Missing asset: " + std::string(relative));
 }
 

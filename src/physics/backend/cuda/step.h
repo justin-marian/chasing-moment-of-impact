@@ -158,7 +158,7 @@ struct Storage {
 	 *
 	 * @param count Number of elements allocated.
 	 */
-    explicit Storage(int count) : 
+    explicit Storage(int count) :
         // 1. Kinematics
         position(count), velocity(count), angular(count),
         // 2. Mass, Geometry & Orientation
@@ -176,13 +176,13 @@ struct Storage {
 	 */
 	StateView view(int count) {
 		return {
-			count, 
+			count,
 			// Linear and angular motion.
-			position.ptr, velocity.ptr, angular.ptr, 
+			position.ptr, velocity.ptr, angular.ptr,
 			// Mass, geometry, and orientation.
-			extent.ptr, inertia.ptr, force.ptr, aabb.ptr, orientation.ptr, 
+			extent.ptr, inertia.ptr, force.ptr, aabb.ptr, orientation.ptr,
 			// Scalar body properties.
-			invMass.ptr, gravity.ptr, radius.ptr, 
+			invMass.ptr, gravity.ptr, radius.ptr,
 			// Solver and collision state.
 			projection.ptr, shape.ptr, sleepCounter.ptr, sleeping.ptr, hasContact.ptr
 		};
@@ -194,20 +194,20 @@ struct Storage {
 /**
  * GPU-resident implementation of the fixed-step physics pipeline.
  *
- * This class fulfills the Backend interface by allocating dedicated 
- * structure-of-arrays (SOA) device memory and executing the simulation entirely 
- * on the GPU. It maintains strict determinism by mirroring the exact same ten-stage 
+ * This class fulfills the Backend interface by allocating dedicated
+ * structure-of-arrays (SOA) device memory and executing the simulation entirely
+ * on the GPU. It maintains strict determinism by mirroring the exact same ten-stage
  * execution order as the CPU backend, ensuring reliable cross-backend parity testing.
  *
  * Design constraints:
- * - **Explicit Boundaries:** State lives on the device during execution. Host/device 
- *   synchronization occurs only at the explicit upload() and download() boundaries, 
+ * - **Explicit Boundaries:** State lives on the device during execution. Host/device
+ *   synchronization occurs only at the explicit upload() and download() boundaries,
  *   minimizing PCIe bus traffic.
- * - **Serialized Stages:** All kernels run on a single non-blocking stream. This 
- *   preserves the strict inter-stage dependencies (e.g., broad-phase must finish before narrow-phase) 
+ * - **Serialized Stages:** All kernels run on a single non-blocking stream. This
+ *   preserves the strict inter-stage dependencies (e.g., broad-phase must finish before narrow-phase)
  *   without requiring expensive global syncs.
- * - **Scratch Ownership:** Pre-allocates all temporary buffers, CUB radix-sort 
- *   scratch space, and pinned host staging buffers on construction to guarantee 
+ * - **Scratch Ownership:** Pre-allocates all temporary buffers, CUB radix-sort
+ *   scratch space, and pinned host staging buffers on construction to guarantee
  *   zero-allocation hot paths.
  */
 class CudaBackend final : public Backend {

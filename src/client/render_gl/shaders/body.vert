@@ -72,11 +72,11 @@ void main() {
 
 	// Extract scale to normalize the local impact coordinates.
 	vec3 scale = instanceScale(aInstanceWorld_m);
-	
+
 	// Position is scaled up to match world space; normal is scaled inversely.
 	impactLocalPoint_m = aPosition_m * scale;
 	impactLocalNormal = aNormal / scale;
-	
+
 	// Extract the impact index from the visual payload (rounded to nearest int).
 	impactIndex = int(aInstanceVisual.w + 0.5);
 

@@ -33,9 +33,9 @@ void main() {
 		// Rotate each sample by the golden angle to ensure even distribution.
 		float angle = float(i) * WORLD.SHADOW.GOLDEN_ANGLE;
 		// Calculate the radial distance and scale the sample position within the footprint.
-		vec2 tap = 
-            vec2(cos(angle), sin(angle)) * 
-            sqrt((float(i) + 0.5) / float(WORLD.SHADOW.SHADOW_TAP_COUNT)) * 
+		vec2 tap =
+            vec2(cos(angle), sin(angle)) *
+            sqrt((float(i) + 0.5) / float(WORLD.SHADOW.SHADOW_TAP_COUNT)) *
             WORLD.SHADOW.SHADOW_FOOTPRINT_RADIUS;
 
 		// Accumulate the exponential falloff based on the distance to the sample.

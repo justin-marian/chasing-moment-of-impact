@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 		// Load the configuration and initial state from the run directory.
 		const std::filesystem::path runDir = argv[1];
 		std::ifstream configFile(runDir / "config.json");
-		
+
 		if (!configFile) {
 			throw std::runtime_error("Cannot open configuration file");
 		}
@@ -62,9 +62,9 @@ int main(int argc, char** argv) {
 		// Step the simulation and inspect the impact telemetry each tick.
 		for (int tick = 0; tick < TOTAL_TICKS; ++tick) {
 			backend->step(state, scenario.world);
-			
+
 			int bodyImpactRecords = 0;
-			
+
 			// Count only confirmed body-to-body impacts (ignore wall hits).
 			for (const auto& impact : backend->impacts()) {
 				if (impact.wallFace_i < 0 && impact.energy_J > 0.f) {
@@ -74,12 +74,12 @@ int main(int argc, char** argv) {
 
 			if (bodyImpactRecords > 0) {
 				++framesWithBodyImpacts;
-				
+
 				// Check if the impact occurred in the late phase of the run.
 				if (tick >= LATE_TICK_THRESHOLD) {
 					++lateFrames;
 				}
-				
+
 				retainedRecords += bodyImpactRecords;
 			}
 		}

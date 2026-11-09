@@ -92,8 +92,8 @@ public:
      *
      * @param enabled Whether confirmed impact events should be retained.
      */
-    virtual void setImpactTracking(bool enabled) { 
-        (void)enabled; 
+    virtual void setImpactTracking(bool enabled) {
+        (void)enabled;
     }
 
 
@@ -106,8 +106,8 @@ public:
      *
      * @return Borrowed view of the latest impact records.
      */
-    virtual std::span<const ImpactEvent> impacts() const { 
-        return {}; 
+    virtual std::span<const ImpactEvent> impacts() const {
+        return {};
     }
 };
 

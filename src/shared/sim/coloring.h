@@ -31,13 +31,13 @@ namespace sim {
  * @return Number of used colors, or -1 when the maximum solver colors are exhausted.
  */
 SIM_HD inline int colorContacts(
-    StateView s, 
-    const Contact* contacts, 
-    const int* contactCounts, 
-    std::uint32_t* masks, 
+    StateView s,
+    const Contact* contacts,
+    const int* contactCounts,
+    std::uint32_t* masks,
     int* colors,
-    int* indices, 
-    int* counts, 
+    int* indices,
+    int* counts,
     int* offsets
 ) {
     constexpr int BITS_PER_WORD = 32;
@@ -53,7 +53,7 @@ SIM_HD inline int colorContacts(
     }
 
     int colorCount = 0;
-    
+
     // Assign the lowest available color to each contact.
     for (int i = 0; i < s.count_i; ++i) {
         for (int slot = 0; slot < contactCounts[i]; ++slot) {
@@ -64,7 +64,7 @@ SIM_HD inline int colorContacts(
             // Iterate through 32-bit words to find a color not used by either body.
             for (int word = 0; word < settings::Collisions::Solver::COLOR_MASK_WORDS && color < 0; ++word) {
                 std::uint32_t used = masks[ct.a_i * settings::Collisions::Solver::COLOR_MASK_WORDS + word];
-                
+
                 if (ct.b_i >= 0) {
                     used |= masks[ct.b_i * settings::Collisions::Solver::COLOR_MASK_WORDS + word];
                 }
@@ -88,7 +88,7 @@ SIM_HD inline int colorContacts(
 
             // Mark the chosen color as used by setting its bit in the body masks.
             std::uint32_t bit = 1U << (color % BITS_PER_WORD);
-            
+
             masks[ct.a_i * settings::Collisions::Solver::COLOR_MASK_WORDS + color / BITS_PER_WORD] |= bit;
             if (ct.b_i >= 0) {
                 masks[ct.b_i * settings::Collisions::Solver::COLOR_MASK_WORDS + color / BITS_PER_WORD] |= bit;
@@ -96,14 +96,14 @@ SIM_HD inline int colorContacts(
 
             colors[index] = color;
             ++counts[color];
-            
+
             if (color + 1 > colorCount) {
                 colorCount = color + 1;
             }
         }
     }
 
-    // Prefix sums so each color group gets a contiguous range in the output array. 
+    // Prefix sums so each color group gets a contiguous range in the output array.
     // The counters are then reset to zero to act as write cursors.
     offsets[0] = 0;
     for (int color = 0; color < colorCount; ++color) {

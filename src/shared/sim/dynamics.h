@@ -24,7 +24,7 @@ namespace sim {
  */
 SIM_HD inline Vec3 inverseInertia(StateView s, int i, Vec3 torque_Nm) {
     return rotate(
-        s.orientation[i], 
+        s.orientation[i],
         multiply(s.inverseInertia_kg_m2[i], rotate(conjugate(s.orientation[i]), torque_Nm))
     );
 }
@@ -44,8 +44,8 @@ SIM_HD inline Vec3 computeExtent(StateView s, int i) {
 
     Quat q = s.orientation[i];
     Vec3 h = s.halfExtents_m[i];
-    
-    return absVec(rotate(q, {1, 0, 0})) * h.x + 
+
+    return absVec(rotate(q, {1, 0, 0})) * h.x +
            absVec(rotate(q, {0, 1, 0})) * h.y +
            absVec(rotate(q, {0, 0, 1})) * h.z;
 }
@@ -92,7 +92,7 @@ SIM_HD inline void integrateVelocity(StateView s, int i, Real dt_s, const WorldC
  * @param s Active-body state view.
  * @param i Body index in the active structure-of-arrays range.
  */
-SIM_HD inline void computeAabb(StateView s, int i) { 
+SIM_HD inline void computeAabb(StateView s, int i) {
     s.aabbExtent_m[i] = computeExtent(s, i);
 }
 
@@ -131,10 +131,10 @@ SIM_HD inline Vec3 supportCentroid(StateView s, int i, Vec3 axis) {
     Vec3 local = rotate(conjugate(s.orientation[i]), axis);
     Vec3 h = s.halfExtents_m[i];
     Vec3 p{};
-    
+
     for (int k = 0; k < 3; ++k) {
-        p[k] = 
-            local[k] > settings::Collisions::Geometry::EPSILON ? 
+        p[k] =
+            local[k] > settings::Collisions::Geometry::EPSILON ?
             h[k] : (local[k] < -settings::Collisions::Geometry::EPSILON ? -h[k] : 0);
     }
 
@@ -150,8 +150,8 @@ SIM_HD inline Vec3 supportCentroid(StateView s, int i, Vec3 axis) {
  * @param point_m World-space contact point in metres.
  * @return Vector result in the same coordinate frame and SI units as the inputs.
  */
-SIM_HD inline Vec3 contactVelocity(StateView s, int i, Vec3 point_m) { 
-    return i < 0 ? Vec3{} : s.velocity_mps[i] + cross(s.angularVelocity_rad_s[i], point_m - s.position_m[i]); 
+SIM_HD inline Vec3 contactVelocity(StateView s, int i, Vec3 point_m) {
+    return i < 0 ? Vec3{} : s.velocity_mps[i] + cross(s.angularVelocity_rad_s[i], point_m - s.position_m[i]);
 }
 
 
@@ -185,12 +185,12 @@ SIM_HD inline void updateSleep(StateView s, int i, const WorldConfig& c) {
         return;
     }
 
-    if (s.hasContact[i] && 
+    if (s.hasContact[i] &&
         length(s.velocity_mps[i]) < c.sleepLinVel_mps &&
         length(s.angularVelocity_rad_s[i]) < c.sleepAngVel_rad_s) {
-        
+
         ++s.sleepCounter_i[i];
-        
+
         if (s.sleepCounter_i[i] >= c.sleepTicks_i) {
             s.isSleeping[i] = 1;
             s.velocity_mps[i] = {};
@@ -218,10 +218,10 @@ SIM_HD inline void projectWorldConstraints(StateView s, int i, const WorldConfig
 
     Vec3 extent = s.aabbExtent_m[i];
     Vec3 before = s.position_m[i];
-    
+
     for (int axis = 0; axis < 3; ++axis) {
         Real limit = c.boxHalfExtents_m[axis] - extent[axis];
-        
+
         if (s.position_m[i][axis] > limit) {
             s.position_m[i][axis] = limit;
             s.hasContact[i] = 1;

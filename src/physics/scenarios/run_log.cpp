@@ -120,8 +120,8 @@ Json runMetadata(const Scenario& scenario, const Backend& backend, const Json& c
  * @throws std::runtime_error If the output files cannot be created.
  */
 RunLog::RunLog(
-    const std::filesystem::path& dir, 
-    const Scenario& scenario, const Backend& backend, 
+    const std::filesystem::path& dir,
+    const Scenario& scenario, const Backend& backend,
     const State& initial
 ) : directory(dir) {
     std::filesystem::create_directories(directory);
@@ -149,8 +149,8 @@ RunLog::RunLog(
     for (auto name : settings::Compute::Stages::NAMES) {
         frames << ",stage_" << name << "wall_ms";
     }
-    
-    frames 
+
+    frames
         << ",total_wall_ms"
         << ",activeBodies_i"
         << ",sleepingBodies_i"
@@ -180,17 +180,17 @@ void RunLog::append(const State& state, const StepResult& result, const WorldCon
     const auto& d = result.diagnostics;
 
     /* Write the row values strictly matching the header order. */
-    frames 
-        << std::setprecision(12) 
-        << state.tick_i << ',' 
-        << static_cast<double>(state.tick_i) * config.dt_s << ',' 
+    frames
+        << std::setprecision(12)
+        << state.tick_i << ','
+        << static_cast<double>(state.tick_i) * config.dt_s << ','
         << config.dt_s;
 
     for (double ms : result.stage_wall_ms) {
         frames << ',' << ms;
     }
 
-    frames 
+    frames
         << ',' << result.total_wall_ms
         << ',' << d.activeBodies_i
         << ',' << d.sleepingBodies_i
@@ -203,7 +203,7 @@ void RunLog::append(const State& state, const StepResult& result, const WorldCon
         << ',' << d.nanCount_i
         << ',' << d.maxSpeed_mps
         << ',' << d.projectedBodies_i
-        << ',' << d.maxWallProjection_m 
+        << ',' << d.maxWallProjection_m
         << '\n';
 
     trace << state.tick_i << ',' << hashState(state) << '\n';

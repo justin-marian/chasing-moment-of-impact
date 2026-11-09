@@ -149,9 +149,9 @@ void test_bv__aabb_obb_bounding_sphere() {
             for (int z : {-1, 1}) {
                 Vec3 p = rotate(b.orientation, {Real(x) * 2, Real(y), Real(z) * Real(.5)});
                 require(
-                    absolute(p.x) <= extent.x + EPSILON && 
-                    absolute(p.y) <= extent.y + EPSILON && 
-                    absolute(p.z) <= extent.z + EPSILON, 
+                    absolute(p.x) <= extent.x + EPSILON &&
+                    absolute(p.y) <= extent.y + EPSILON &&
+                    absolute(p.z) <= extent.z + EPSILON,
                 "AABB excludes vertex");
             }
 
@@ -518,7 +518,7 @@ void test_energy_momentum__100000_ticks() {
 
 
 /**
- * Verify that an aligned four-box stack settles without 
+ * Verify that an aligned four-box stack settles without
  * drift, NaN, or escape over a million actual ticks.
  */
 void test_stack__four_boxes_1000000_ticks() {

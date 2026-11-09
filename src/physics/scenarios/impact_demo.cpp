@@ -21,7 +21,7 @@ namespace app {
  */
 sim::Scenario viewerScenario(const std::string& id, std::uint64_t seed) {
     auto scene = sim::matrixScenario(id == "impact" ? "demo" : id, seed);
-    
+
     if (id == "impact") {
         scene.id = id;
         scene.counts = {3, 3, 0, 0};
@@ -31,7 +31,7 @@ sim::Scenario viewerScenario(const std::string& id, std::uint64_t seed) {
         scene.world.angularDamping_per_s = 0;
         scene.world.enableSleep = false;
     }
-    
+
     return scene;
 }
 
@@ -61,22 +61,22 @@ void populateViewer(sim::State& state, const sim::Scenario& scene) {
     constexpr float PROJECTILE_Z_FACTOR = .4f;
 
     state.clear();
-    
+
     for (int i = 0; i < 3; ++i) {
         const float speed = SPEEDS[i];
         const float x = float(i - 1) * X_SPACING;
-        
+
         sim::Body target;
         target.shape = sim::Shape::Cube;
         target.halfExtents_m = {TARGET_EXTENT, TARGET_EXTENT, TARGET_EXTENT};
         target.mass_kg = {TARGET_MASS};
         target.position_m = {x, 0, -1};
         state.spawn(target);
-        
+
         sim::Body projectile;
         projectile.position_m = {
-            x + PROJECTILE_EXTENT, 
-            .2f, 
+            x + PROJECTILE_EXTENT,
+            .2f,
             PROJECTILE_BASE_Z + PROJECTILE_Z_FACTOR * speed
         };
 

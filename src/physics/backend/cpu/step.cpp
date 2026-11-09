@@ -20,24 +20,24 @@ namespace sim {
  *
  * @param capacity Maximum number of bodies processed by this backend.
  */
-CpuBackend::CpuBackend(int capacity) : 
+CpuBackend::CpuBackend(int capacity) :
     entries(capacity), keys(capacity), ids(capacity),
     candidates(static_cast<std::size_t>(capacity) * settings::Collisions::Storage::MAX_CANDIDATES),
-    candidateCounts(capacity), 
+    candidateCounts(capacity),
 
     overflow(capacity),
     contacts(static_cast<std::size_t>(capacity) * settings::Collisions::Storage::MAX_CONTACTS),
-    contactCounts(capacity), 
+    contactCounts(capacity),
 
-    impactMeasures{}, 
-    impactEvents{}, 
+    impactMeasures{},
+    impactEvents{},
     trackImpacts(false),
 
     colorMasks(static_cast<std::size_t>(capacity) * settings::Collisions::Solver::COLOR_MASK_WORDS),
     colors(static_cast<std::size_t>(capacity) * settings::Collisions::Storage::MAX_CONTACTS),
     coloredIndices(static_cast<std::size_t>(capacity) * settings::Collisions::Storage::MAX_CONTACTS),
-    colorCounts{}, 
-    colorOffsets{} 
+    colorCounts{},
+    colorOffsets{}
 {}
 
 

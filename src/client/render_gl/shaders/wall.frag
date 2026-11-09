@@ -31,7 +31,7 @@ uniform bool uImpactEnabled;
 float glassRadialAlpha(vec2 faceUv) {
     float edge = max(abs(faceUv.x * 2.0 - 1.0), abs(faceUv.y * 2.0 - 1.0));
     return WORLD.ENCLOSURE.GLASS_ALPHA_CORE +
-           WORLD.ENCLOSURE.GLASS_EDGE_ALPHA * 
+           WORLD.ENCLOSURE.GLASS_EDGE_ALPHA *
            smoothstep(WORLD.ENCLOSURE.GLASS_EDGE_START, 1.0, edge);
 }
 

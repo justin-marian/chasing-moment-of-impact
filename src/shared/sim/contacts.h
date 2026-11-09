@@ -66,7 +66,7 @@ SIM_HD inline bool sphereSphere(StateView s, int a, int b, Real dt_s, const Worl
     out.normal = normal;
     out.depth_m = depth;
     out.point_m = s.position_m[a] + normal * (s.halfExtents_m[a].x - depth * MIDPOINT_SCALE);
-    
+
     return true;
 }
 
@@ -98,7 +98,7 @@ SIM_HD inline bool sphereBox(StateView s, int sphere, int box, const WorldConfig
     if (distance < settings::Collisions::Geometry::EPSILON) {
         int axis = 0;
         Real gap = h.x - absolute(local.x);
-        
+
         for (int k = 1; k < 3; ++k) {
             if (h[k] - absolute(local[k]) < gap) {
                 axis = k;
@@ -124,7 +124,7 @@ SIM_HD inline bool sphereBox(StateView s, int sphere, int box, const WorldConfig
     out.normal = rotate(s.orientation[box], n);
     out.depth_m = depth;
     out.point_m = s.position_m[box] + rotate(s.orientation[box], closest);
-    
+
     return true;
 }
 
@@ -145,12 +145,12 @@ SIM_HD inline bool boxBox(StateView s, int a, int b, const WorldConfig& c, Conta
     constexpr Real MIDPOINT_SCALE = Real(.5);
 
     Vec3 axesA[3] = {
-        rotate(s.orientation[a], {1, 0, 0}), 
+        rotate(s.orientation[a], {1, 0, 0}),
         rotate(s.orientation[a], {0, 1, 0}),
         rotate(s.orientation[a], {0, 0, 1})
     };
     Vec3 axesB[3] = {
-        rotate(s.orientation[b], {1, 0, 0}), 
+        rotate(s.orientation[b], {1, 0, 0}),
         rotate(s.orientation[b], {0, 1, 0}),
         rotate(s.orientation[b], {0, 0, 1})
     };
@@ -161,7 +161,7 @@ SIM_HD inline bool boxBox(StateView s, int a, int b, const WorldConfig& c, Conta
 
     for (int k = 0; k < SEPARATING_AXES_COUNT; ++k) {
         Vec3 axis{};
-        
+
         if (k < 3) {
             axis = axesA[k];
         } else if (k < 6) {
@@ -171,14 +171,14 @@ SIM_HD inline bool boxBox(StateView s, int a, int b, const WorldConfig& c, Conta
         }
 
         Real n = length(axis);
-        
+
         if (n < settings::Collisions::Geometry::EPSILON) {
             continue;
         }
 
         axis = axis / n;
         Real overlap = projectRadius(s, a, axis) + projectRadius(s, b, axis) - absolute(dot(delta, axis));
-        
+
         if (overlap < -c.contactSlop_m) {
             return false;
         }
@@ -195,7 +195,7 @@ SIM_HD inline bool boxBox(StateView s, int a, int b, const WorldConfig& c, Conta
     out.normal = best;
     out.depth_m = depth;
     out.point_m = (supportCentroid(s, a, best) + supportCentroid(s, b, -best)) * MIDPOINT_SCALE;
-    
+
     return true;
 }
 
@@ -228,7 +228,7 @@ SIM_HD inline bool pairContact(StateView s, int a, int b, Real dt_s, const World
     out.a_i = a;
     out.b_i = b;
     out.normal = -out.normal;
-    
+
     return true;
 }
 

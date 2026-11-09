@@ -55,11 +55,11 @@ struct ScenarioValue {
      */
     Real number() {
         Real value = static_cast<Real>(std::stod(text, &used));
-        
+
         if (used != text.size() || !std::isfinite(value)) {
             throw std::runtime_error("Invalid number: " + key);
         }
-        
+
         return value;
     }
 
@@ -72,11 +72,11 @@ struct ScenarioValue {
      */
     int integer() {
         int value = std::stoi(text, &used);
-        
+
         if (used != text.size()) {
             throw std::runtime_error("Invalid integer: " + key);
         }
-        
+
         return value;
     }
 
@@ -89,11 +89,11 @@ struct ScenarioValue {
      */
     std::uint64_t unsignedInteger() {
         auto value = std::stoull(text, &used);
-        
+
         if (used != text.size()) {
             throw std::runtime_error("Invalid integer: " + key);
         }
-        
+
         return value;
     }
 
@@ -138,7 +138,7 @@ void readField(const Json& json, const char* name, T& value) {
  */
 std::string trim(std::string value) {
     auto first = value.find_first_not_of(" \t\r");
-    
+
     if (first == std::string::npos) {
         return {};
     }
@@ -157,7 +157,7 @@ std::string trim(std::string value) {
  */
 settings::Collisions::Scenario::Field scenarioField(std::string_view key) {
     auto it = std::find_if(
-        std::begin(settings::Collisions::Scenario::FIELDS), 
+        std::begin(settings::Collisions::Scenario::FIELDS),
         std::end(settings::Collisions::Scenario::FIELDS),
         [key](const auto& field) { return field.first == key; }
     );
@@ -214,7 +214,7 @@ void setScenarioValue(Scenario& s, const std::string& key, const std::string& te
  */
 void validateScenario(const Scenario& s) {
     int total = 0;
-    
+
     for (int count : s.counts) {
         if (count < 0) {
             throw std::runtime_error("Negative body count");
@@ -256,8 +256,8 @@ Scenario matrixScenario(std::string_view id, std::uint64_t seed) {
     s.seed = seed;
 
     if (id == "A") { s.counts = {100, 250, 250, 250}; }
-    else if (id == "B") { s.counts = {250, 500, 500, 500}; } 
-    else if (id == "C") { s.counts = {500, 1000, 1250, 1250}; } 
+    else if (id == "B") { s.counts = {250, 500, 500, 500}; }
+    else if (id == "C") { s.counts = {500, 1000, 1250, 1250}; }
     else if (id == "demo") {
         s.world.boxHalfExtents_m = {12, 15, 12};
         s.radius_m = Real(.60);
@@ -281,7 +281,7 @@ Scenario matrixScenario(std::string_view id, std::uint64_t seed) {
  */
 Scenario loadScenario(const std::filesystem::path& path) {
     std::ifstream in(path);
-    
+
     if (!in) {
         throw std::runtime_error("Cannot read scenario " + path.string());
     }
@@ -359,11 +359,11 @@ Json encodeConfig(const Scenario& s) {
         {"enableSleep", c.enableSleep},
         {"enableCcd", c.enableCcd}
     };
-    
+
     if (s.staggeredSpawn) {
         config["staggeredSpawn"] = true;
     }
-    
+
     return config;
 }
 
@@ -386,7 +386,7 @@ Scenario decodeConfig(const Json& json) {
 
     auto& c = s.world;
     c.boxHalfExtents_m = jsonVector(json.at("boxHalfExtents_m"));
-    
+
     /* World physics. */
     readField(json, "dt_s", c.dt_s);
     readField(json, "gravity_mps2", c.gravity_mps2);

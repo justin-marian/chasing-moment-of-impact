@@ -15,10 +15,10 @@ namespace {
  * Kernel to generate body/body contacts from the broad-phase candidate lists.
  */
 __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void bodyContactsKernel(
-	StateView s, WorldConfig c, 
-    const int* __restrict__ candidates, 
+	StateView s, WorldConfig c,
+    const int* __restrict__ candidates,
     const int* __restrict__ counts,
-	Contact* __restrict__ contacts, 
+	Contact* __restrict__ contacts,
     int* __restrict__ contactCounts
 ) {
 	int i = int(blockIdx.x * blockDim.x + threadIdx.x);
@@ -27,7 +27,7 @@ __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void bodyConta
 	}
 
 	int count = 0;
-	
+
 	// Iterate through gathered candidates for this body.
 	for (int k = 0; k < counts[i]; ++k) {
 		int j = candidates[std::size_t(i) * settings::Collisions::Storage::MAX_CANDIDATES + k];
@@ -45,8 +45,8 @@ __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void bodyConta
  * Kernel to generate contacts between bodies and the static world-box faces.
  */
 __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void worldContactsKernel(
-	StateView s, WorldConfig c, 
-    Contact* __restrict__ contacts, 
+	StateView s, WorldConfig c,
+    Contact* __restrict__ contacts,
     int* __restrict__ counts
 ) {
 	int i = int(blockIdx.x * blockDim.x + threadIdx.x);

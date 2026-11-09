@@ -71,7 +71,7 @@ void drawFloor(const Renderer::Impl& impl, const glm::mat4& camera, const glm::v
  * @param height      Framebuffer height.
  */
 void buildLines(
-    Renderer::Impl& impl, const sim::State& s, const glm::vec3& halfExtents, 
+    Renderer::Impl& impl, const sim::State& s, const glm::vec3& halfExtents,
     const glm::vec3& eye, int left, int width, int right, int canvasWidth, int height
 );
 

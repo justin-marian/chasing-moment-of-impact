@@ -2,8 +2,8 @@
  * @file
  * World domain shader settings.
  *
- * Aggregates all environment, lighting, avatar, and impact telemetry 
- * parameters into a single global constant. Included by shaders that 
+ * Aggregates all environment, lighting, avatar, and impact telemetry
+ * parameters into a single global constant. Included by shaders that
  * require access to global visual tuning parameters.
  */
 
@@ -132,7 +132,7 @@
 /* COLOR (CLR)                                                               */
 /* ========================================================================= */
 
-/* Exact IEC standard sRGB linearization thresholds. 
+/* Exact IEC standard sRGB linearization thresholds.
    [Link: https://registry.khronos.org/DataFormat/specs/1.2/dataformat.1.2.pdf#14#40#14] */
 #define CLR_SRGB_LIN_THRESH 0.04045
 #define CLR_SRGB_ENC_THRESH 0.0031308
@@ -192,12 +192,12 @@ const WorldShaderSettings WORLD = WorldShaderSettings(
         SHD_BIAS_SCALE, SHD_BIAS_MIN, SHD_TINT, SHD_FOOTPRINT_R,
         SHD_FOOTPRINT_F, SHD_FOOTPRINT_S
     ),
-    
+
     /* AVATAR */
     // WorldAvatarSettings(
     //     AVT_SLOTS
     // ),
-    
+
     /* SCENE */
     WorldSceneSettings(
         SCN_FOG, SCN_VAR_FREQ_X, SCN_VAR_FREQ_Z, SCN_VAR_AMT, SCN_GRID_STR,
@@ -205,36 +205,36 @@ const WorldShaderSettings WORLD = WorldShaderSettings(
         SCN_SURF_GROUND, SCN_SURF_ARENA, SCN_FILL_DIR, SCN_LINE_COLOR,
         SCN_FINE_ALPHA, SCN_BOLD_ALPHA, SCN_MAJOR_STEP, SCN_FWIDTH_MIN
     ),
-    
+
     /* ENCLOSURE */
     WorldEnclosureSettings(
         ENC_TINT, ENC_ALPHA_CORE, ENC_EDGE_ALPHA, ENC_EDGE_START,
         ENC_FRES_POW, ENC_FRES_STR, ENC_HEAT_ALPHA
     ),
-    
+
     /* LIGHTING */
     WorldLightingSettings(
         LGT_KEY_DIR
     ),
-    
+
     /* BACKGROUND */
     WorldBackgroundSettings(
         BGD_PAPER_BOT, BGD_PAPER_TOP, BGD_PAPER_CAP, BGD_CAP_PX
     ),
-    
+
     /* BODIES */
     WorldBodiesSettings(
         BDY_FLASH_HL, BDY_FLASH_SPEC, BDY_FRES_F0, BDY_FRES_SCHLICK,
         BDY_FRES_STR, BDY_SPEC_STR, BDY_SURF_RESP
     ),
-    
+
     /* COLOR */
     WorldColorSettings(
         CLR_SRGB_LIN_THRESH, CLR_SRGB_ENC_THRESH, CLR_SRGB_LIN_SLOPE,
         CLR_SRGB_ENC_SLOPE, CLR_SRGB_ENC_OFFSET, CLR_SRGB_GAMMA,
         CLR_ACES_A, CLR_ACES_B, CLR_SKY_GAMMA
     ),
-    
+
     /* IMPACTS */
     WorldImpactsSettings(
         IMP_FALLOFF, IMP_COV_LO, IMP_COV_HI, IMP_COV_MAX, IMP_FACE_LO, IMP_FACE_HI,

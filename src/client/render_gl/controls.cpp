@@ -127,8 +127,8 @@ bool button(const char* name, float width, bool primary) {
  * @return True if the value was changed.
  */
 bool slider(
-    const char* name, float* value, 
-    float low, float high, 
+    const char* name, float* value,
+    float low, float high,
     const char* format, const char* unit,
     const Fonts& fonts
 ) {
@@ -162,18 +162,18 @@ bool slider(
     ImGui::PushFont(fonts.parameterValue ? fonts.parameterValue : fonts.mono);
     ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 2 * settings::World::Ui::Slider::HANDLE_RADIUS * scale);
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
-    
+
     for (auto color : {
-        ImGuiCol_FrameBg, ImGuiCol_FrameBgHovered, ImGuiCol_FrameBgActive, 
+        ImGuiCol_FrameBg, ImGuiCol_FrameBgHovered, ImGuiCol_FrameBgActive,
         ImGuiCol_SliderGrab, ImGuiCol_SliderGrabActive
     }) { ImGui::PushStyleColor(color, ImVec4(0, 0, 0, 0)); }
-    
+
     ImGui::PushStyleColor(ImGuiCol_Text, editing ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(0, 0, 0, 0));
-    
+
     const bool changed = ImGui::SliderFloat("##value", value, low, high, format, ImGuiSliderFlags_AlwaysClamp);
     ImGui::PopStyleColor(6);
     ImGui::PopStyleVar(2);
-    
+
     if (!ImGui::TempInputIsActive(ImGui::GetItemID())) {
         drawSliderTrack(*value, low, high, scale);
     }

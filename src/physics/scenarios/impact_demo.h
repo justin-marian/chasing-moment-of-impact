@@ -2,7 +2,7 @@
  * @file
  * Build and populate the selectable deterministic glass-physics scenarios.
  *
- * Provides controlled collision scenarios for native impact previews and captures. 
+ * Provides controlled collision scenarios for native impact previews and captures.
  * The built-in impact demo is a purpose-built setup: three real
  * sphere/box collisions at 1, 4, and 9 m/s, with no gravity, no damping, and
  * no sleeping, so the impact palette ramp is visible end-to-end in one frame.

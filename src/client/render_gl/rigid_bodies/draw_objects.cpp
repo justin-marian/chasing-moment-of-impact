@@ -38,12 +38,12 @@ glm::vec4 bodyColorForId(int id) {
 
     float r, g, b;
     ImGui::ColorConvertHSVtoRGB(
-        hue, 
+        hue,
         settings::World::Rendering::RigidBodies::Appearance::BODY_SATURATION,
-        settings::World::Rendering::RigidBodies::Appearance::BODY_VALUE, 
+        settings::World::Rendering::RigidBodies::Appearance::BODY_VALUE,
         r, g, b
     );
-    
+
     return {r, g, b, 1.0f};
 }
 
@@ -209,7 +209,7 @@ void buildWalls(Renderer::Impl& impl, const glm::vec3& eye, const glm::vec3& hal
     int nearFace = nearAxis * 2 + (eye[nearAxis] >= 0 ? 1 : 0);
 
     impl.walls.clear();
-    
+
     for (int face = 0; face < WALL_COUNT; ++face) {
         if (face == nearFace) {
             continue;
@@ -266,9 +266,9 @@ void drawWalls(Renderer::Impl& impl, const glm::mat4& camera, const glm::vec3& e
     glUseProgram(impl.wall);
     glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(camera));
     uniform(impl.wall, "uCameraPos_m", eye);
-    
+
     glUniform1i(glGetUniformLocation(impl.wall, "uImpactEnabled"), impl.impacts.enabled ? 1 : 0);
-    
+
     impl.plane->draw(impl.walls);
 }
 

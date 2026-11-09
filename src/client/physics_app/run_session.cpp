@@ -443,12 +443,12 @@ std::filesystem::path metadataPathFor(const std::filesystem::path& screenshot) {
 bool writeMetadata(const Session& s, const std::filesystem::path& screenshot) {
     const auto path = metadataPathFor(screenshot);
     std::ofstream out(path);
-    
+
     if (!out) {
         std::cerr << "capture: could not open " << path << " for writing\n";
         return false;
     }
-    
+
     out << captureData(s).dump(2);
     return true;
 }

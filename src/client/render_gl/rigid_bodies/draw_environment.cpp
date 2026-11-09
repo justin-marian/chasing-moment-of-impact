@@ -43,7 +43,7 @@ void drawBackground(const Renderer::Impl& impl, int heightPx) {
     // from the vertex index. A vertex array object still has to be bound for
     // the draw call to be well-formed, even though it carries nothing.
     glBindVertexArray(impl.emptyVao);
-    
+
     // background.vert derives one fullscreen triangle from gl_VertexID; no vertex buffer is needed.
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -77,7 +77,7 @@ void drawFloor(const Renderer::Impl& impl, const glm::mat4& camera, const glm::v
         {0, -halfExtents.y, 0},
         {halfExtents.x, halfExtents.z, 1}
     );
-    
+
     impl.plane->draw({{plane, {1, 1, 1, 1}}});
 }
 
@@ -103,7 +103,7 @@ void buildShadows(Renderer::Impl& impl, const sim::State& s, const glm::vec3& ha
         auto p = s.position_m[i];
         float radius = s.boundingRadius_m[i];
         float above = p.y + halfExtents.y - s.aabbExtent_m[i].y;
-        
+
         // Skip bodies that are too high up to cast a visible ground shadow.
         if (above > radius * SHADOW_FADE_DISTANCE_FACTOR) {
             continue;
@@ -112,7 +112,7 @@ void buildShadows(Renderer::Impl& impl, const sim::State& s, const glm::vec3& ha
         // Fade out the shadow as the body rises off the floor.
         float fade = glm::clamp(1 - above / (radius * SHADOW_FADE_DISTANCE_FACTOR), 0.0f, 1.0f);
         auto world = groundPlane(
-            {p.x, -halfExtents.y + SHADOW_Y_OFFSET, p.z}, 
+            {p.x, -halfExtents.y + SHADOW_Y_OFFSET, p.z},
             {radius * SHADOW_SCALE_FACTOR, radius * SHADOW_SCALE_FACTOR, 1}
         );
 
@@ -133,7 +133,7 @@ void buildShadows(Renderer::Impl& impl, const sim::State& s, const glm::vec3& ha
 void drawShadows(const Renderer::Impl& impl, const glm::mat4& camera) {
     glUseProgram(impl.shadow);
     glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(camera));
-    
+
     // Relies on state left over from drawFloor (blend on, depth test on, mask off).
     impl.plane->draw(impl.shadows);
 }
@@ -167,13 +167,13 @@ void emitLine(std::vector<LineVertex>& out, glm::vec3 a, glm::vec3 b, glm::vec4 
  */
 void emitBox(std::vector<LineVertex>& out, glm::mat4 world, glm::vec4 color) {
     std::array<glm::vec3, 8> p;
-    
+
     for (int i = 0; i < 8; ++i) {
         // Convert 3-bit binary index into a (+/-1, +/-1, +/-1) local corner coordinate.
         p[i] = glm::vec3(world * glm::vec4(
-            i & 1 ? 1.0f : -1.0f, 
-            i & 2 ? 1.0f : -1.0f, 
-            i & 4 ? 1.0f : -1.0f, 
+            i & 1 ? 1.0f : -1.0f,
+            i & 2 ? 1.0f : -1.0f,
+            i & 4 ? 1.0f : -1.0f,
             1
         ));
     }
@@ -209,8 +209,8 @@ void emitBox(std::vector<LineVertex>& out, glm::mat4 world, glm::vec4 color) {
  * @param height      Total height of the window.
  */
 void buildLines(
-    Renderer::Impl& impl, const sim::State& s, 
-    const glm::vec3& halfExtents, 
+    Renderer::Impl& impl, const sim::State& s,
+    const glm::vec3& halfExtents,
     const glm::vec3& eye, int left, int width, int right, int canvasWidth, int height
 ) {
     constexpr glm::vec4 ARENA_BORDER_COLOR = {211.0f / 255, 209.0f / 255, 203.0f / 255, .4f};
@@ -218,7 +218,7 @@ void buildLines(
     constexpr glm::vec4 AABB_COLOR = {35.0f / 255, 131.0f / 255, 226.0f / 255, .4f};
     constexpr glm::vec4 OBB_COLOR = {35.0f / 255, 131.0f / 255, 226.0f / 255, .6f};
     constexpr glm::vec4 VELOCITY_COLOR = {15.0f / 255, 123.0f / 255, 108.0f / 255, .8f};
-    
+
     constexpr float HOVER_EDGE_FRACTION = .08f;
     constexpr float HOVER_BOTTOM_FRACTION = .92f;
     constexpr float VELOCITY_SCALE = .2f;
@@ -238,7 +238,7 @@ void buildLines(
     bool hover = mouse.x > float(left) && mouse.x < float(width - right) &&
                  (mouse.x < float(left) + float(canvasWidth) * HOVER_EDGE_FRACTION ||
                   mouse.x > float(width - right) - float(canvasWidth) * HOVER_EDGE_FRACTION ||
-                  mouse.y < float(height) * HOVER_EDGE_FRACTION || 
+                  mouse.y < float(height) * HOVER_EDGE_FRACTION ||
                   mouse.y > float(height) * HOVER_BOTTOM_FRACTION);
     if (hover) {
         emitBox(impl.lines, glm::scale(glm::mat4(1), halfExtents), ARENA_HOVER_COLOR);
@@ -251,39 +251,40 @@ void buildLines(
     // Per-body overlays draw on top of the scene; disabling depth lets an
     // occluded body still show its bounds.
     glDisable(GL_DEPTH_TEST);
-    
+
     for (int i = 0; i < s.count_i; ++i) {
         auto p = s.position_m[i];
         auto h = s.halfExtents_m[i];
         auto e = s.aabbExtent_m[i];
         auto q = s.orientation[i];
         auto translation = glm::translate(glm::mat4(1), glm::vec3(p.x, p.y, p.z));
-        
+
         if (impl.aabb) {
             // Axis-aligned bounds (no rotation).
             emitBox(
-                impl.lines, 
+                impl.lines,
                 translation * glm::scale(glm::mat4(1), glm::vec3(e.x, e.y, e.z)),
                 AABB_COLOR
             );
         }
-        
+
         if (impl.obb) {
             // Oriented bounds (includes rotation).
             emitBox(
                 impl.lines,
-                translation * glm::mat4_cast(glm::quat(q.w, q.x, q.y, q.z)) *
-                    glm::scale(glm::mat4(1), glm::vec3(h.x, h.y, h.z)),
+                translation *
+                glm::mat4_cast(glm::quat(q.w, q.x, q.y, q.z)) *
+                glm::scale(glm::mat4(1), glm::vec3(h.x, h.y, h.z)),
                 OBB_COLOR
             );
         }
-        
+
         if (impl.velocity) {
             // Draw a line indicating the direction and magnitude of the body's velocity.
             auto v = s.velocity_mps[i];
             emitLine(
-                impl.lines, 
-                {p.x, p.y, p.z}, 
+                impl.lines,
+                {p.x, p.y, p.z},
                 {p.x + v.x * VELOCITY_SCALE, p.y + v.y * VELOCITY_SCALE, p.z + v.z * VELOCITY_SCALE},
                 VELOCITY_COLOR
             );
@@ -303,15 +304,15 @@ void drawLines(Renderer::Impl& impl, const glm::mat4& camera) {
     glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(camera));
     glBindVertexArray(impl.lineVao);
     glBindBuffer(GL_ARRAY_BUFFER, impl.lineBuffer);
-    
+
     // Stream the lines to the GPU, replacing the previous frame's buffer.
     glBufferData(
-        GL_ARRAY_BUFFER, 
-        static_cast<GLsizeiptr>(impl.lines.size() * sizeof(LineVertex)), 
+        GL_ARRAY_BUFFER,
+        static_cast<GLsizeiptr>(impl.lines.size() * sizeof(LineVertex)),
         impl.lines.data(),
         GL_STREAM_DRAW
     );
-    
+
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(impl.lines.size()));
 }
 

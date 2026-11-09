@@ -17,11 +17,11 @@ namespace {
  * Kernel to compute the spatial grid cell key for each active body.
  */
 __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void gridKeysKernel(
-	StateView s, WorldConfig c, 
+	StateView s, WorldConfig c,
     std::uint64_t* __restrict__ keys, int* __restrict__ ids
 ) {
 	int i = int(blockIdx.x * blockDim.x + threadIdx.x);
-	
+
 	if (i < s.count_i) {
 		keys[i] = bodyCellKey(s, i, c);
 		ids[i] = i;
@@ -51,21 +51,21 @@ __global__ void gridLimitsKernel(StateView s, Real* limits) {
  * Kernel to gather potential collision candidates for each active body using the sorted grid keys.
  */
 __global__ __launch_bounds__(settings::Compute::Cuda::BLOCK_SIZE) void broadPhaseKernel(
-	StateView s, WorldConfig c, 
-    const Real* __restrict__ limits, 
-    const std::uint64_t* __restrict__ keys, const int* __restrict__ ids, 
+	StateView s, WorldConfig c,
+    const Real* __restrict__ limits,
+    const std::uint64_t* __restrict__ keys, const int* __restrict__ ids,
     int* __restrict__ candidates, int* __restrict__ counts,
 	int* __restrict__ overflow
 ) {
 	int i = int(blockIdx.x * blockDim.x + threadIdx.x);
-	
+
 	if (i >= s.count_i) {
 		return;
 	}
 
 	overflow[i] = 0;
 	counts[i] = gatherCandidates(
-		s, i, c, c.dt_s, 
+		s, i, c, c.dt_s,
         limits[0], limits[1],
         keys, ids,
 		candidates + std::size_t(i) * settings::Collisions::Storage::MAX_CANDIDATES, overflow[i]
@@ -90,9 +90,9 @@ void CudaBackend::broadPhase(StateView s, const WorldConfig& c) {
 	if (count) {
 		CUDA_CHECK(
 			cub::DeviceRadixSort::SortPairs(
-				scratch->ptr, scratchBytes, 
-                keysIn.ptr, keysOut.ptr, 
-                idsIn.ptr, idsOut.ptr, 
+				scratch->ptr, scratchBytes,
+                keysIn.ptr, keysOut.ptr,
+                idsIn.ptr, idsOut.ptr,
                 count, 0, 64,
 				stream.value
 			)
@@ -104,9 +104,9 @@ void CudaBackend::broadPhase(StateView s, const WorldConfig& c) {
 	CUDA_CHECK(cudaGetLastError());
 
 	broadPhaseKernel<<<blocks, settings::Compute::Cuda::BLOCK_SIZE, 0, stream.value>>>(
-		s, c, limits.ptr, 
-        keysOut.ptr, idsOut.ptr, 
-        candidates.ptr, candidateCounts.ptr, 
+		s, c, limits.ptr,
+        keysOut.ptr, idsOut.ptr,
+        candidates.ptr, candidateCounts.ptr,
         overflow.ptr
 	);
 	CUDA_CHECK(cudaGetLastError());

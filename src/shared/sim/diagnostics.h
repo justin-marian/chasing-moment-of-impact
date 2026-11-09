@@ -36,8 +36,8 @@ SIM_HD inline Diagnostics emitDiagnostics(StateView s, const WorldConfig& c) {
 		}
 
 		// Numerical stability.
-		if (!finite(s.position_m[i]) || 
-			!finite(s.velocity_mps[i]) || 
+		if (!finite(s.position_m[i]) ||
+			!finite(s.velocity_mps[i]) ||
 			!finite(s.angularVelocity_rad_s[i])) {
 			++d.nanCount_i;
 		}
@@ -47,7 +47,7 @@ SIM_HD inline Diagnostics emitDiagnostics(StateView s, const WorldConfig& c) {
 		Vec3 local = rotate(conjugate(s.orientation[i]), s.angularVelocity_rad_s[i]);
 		Vec3 inv = s.inverseInertia_kg_m2[i];
 
-		Real angular = 
+		Real angular =
 			(inv.x > 0 ? local.x * local.x / inv.x : 0) +
 			(inv.y > 0 ? local.y * local.y / inv.y : 0) +
 			(inv.z > 0 ? local.z * local.z / inv.z : 0);
@@ -59,14 +59,14 @@ SIM_HD inline Diagnostics emitDiagnostics(StateView s, const WorldConfig& c) {
 
 		// Activity.
 		d.maxSpeed_mps = maximum(d.maxSpeed_mps, length(s.velocity_mps[i]));
-		
+
 		if (s.isSleeping[i]) {
 			++d.sleepingBodies_i;
 		} else {
 			++d.activeBodies_i;
 		}
 	}
-	
+
 	return d;
 }
 

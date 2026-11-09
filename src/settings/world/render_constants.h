@@ -86,11 +86,11 @@ struct World::Rendering {
 
     struct Gpu {
         inline static constexpr int IMPACT_BINDING = 3;
-        
-        inline static constexpr std::size_t WALL_OFFSET = 
+
+        inline static constexpr std::size_t WALL_OFFSET =
             settings::Collisions::Storage::MAX_BODIES * settings::Collisions::Impacts::PATCHES_PER_SURFACE;
-            
-        inline static constexpr std::size_t IMPACT_SLOT_COUNT = 
+
+        inline static constexpr std::size_t IMPACT_SLOT_COUNT =
             WALL_OFFSET + settings::Collisions::Geometry::BOX_FACE_COUNT * settings::Collisions::Impacts::PATCHES_PER_SURFACE;
     };
 
@@ -99,7 +99,7 @@ struct World::Rendering {
 
         struct Targets {
             static inline constexpr int MSAA_SAMPLES = 4;
-            
+
             static inline constexpr std::array<float, 4> FULL_CLEAR_COLOR{.97f, .969f, .96f, 1.f};   /* Off-white */
             static inline constexpr std::array<float, 4> CANVAS_CLEAR_COLOR{.91f, .927f, .938f, 1.f}; /* Cool light gray */
         };
@@ -142,7 +142,7 @@ struct World::Rendering {
             static inline constexpr int NORMAL_TEXTURE_UNIT = 1;
 
             static inline constexpr std::array<float, 3> GROUND_COLOR{.32f, .46f, .27f}; /* Olive green */
-            
+
             // MMO specific: Avatar tinting.
             // static inline constexpr std::array<float, 3> SECONDARY_AVATAR_TINT{.85f, .83f, .79f};
             // static inline constexpr float SECONDARY_AVATAR_TINT_MIX = .6f;
@@ -155,7 +155,7 @@ struct World::Rendering {
 
             static inline constexpr float WORLD_IMPACT_BASE_RADIUS = .4f;
             static inline constexpr float WORLD_IMPACT_RADIUS_SCALE = .35f;
-            
+
             // MMO specific: Avatar impact visuals.
             // static inline constexpr std::size_t MAX_AVATAR = 4;
             // static inline constexpr float AVATAR_IMPACT_BASE_RADIUS = .3f;
@@ -188,7 +188,7 @@ struct World::Rendering {
         //
         //     /* Separate rounded username/state pills share a baseline and leave a small visible gap. */
         //     static inline constexpr float STATE_HORIZONTAL_PADDING = 9.f, STATE_GAP = 6.f;
-        //     
+        //
         //     static inline constexpr unsigned NAME_BACKGROUND = 0xF9F8F5;  /* Off-white */
         //     static inline constexpr unsigned NAME_TEXT = 0x45494C;        /* Dark slate */
         //     static inline constexpr unsigned STATE_BACKGROUND = 0xDFEBF7; /* Light blue */

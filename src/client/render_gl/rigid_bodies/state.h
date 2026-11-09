@@ -79,7 +79,7 @@ struct Renderer::Impl {
     bool presentation{}, rightPanel{};
     bool aabb{}, obb{}, velocity{};
 
-    /* 
+    /*
      * Members are destroyed after the destructor body returns, by which
      * point the window and GL context are already gone. Their destructors
      * must not touch GL or UI state. Tear down anything that does

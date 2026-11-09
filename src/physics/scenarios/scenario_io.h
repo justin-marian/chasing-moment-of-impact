@@ -1,6 +1,6 @@
 /**
  * @file
- * Validate scenario configuration and serialize 
+ * Validate scenario configuration and serialize
  * deterministic state, diagnostics, and replay artifacts.
  */
 
@@ -186,8 +186,8 @@ public:
      * @param initial   Initial state written for later replay.
      */
     RunLog(
-        const std::filesystem::path& directory, 
-        const Scenario& scenario, 
+        const std::filesystem::path& directory,
+        const Scenario& scenario,
         const Backend& backend,
         const State& initial
     );

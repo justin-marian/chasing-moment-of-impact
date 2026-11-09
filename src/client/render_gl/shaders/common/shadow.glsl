@@ -36,7 +36,7 @@ float shadow(vec3 worldPos, vec3 n, mat4 lightProj, sampler2D shadowMap) {
 
     vec4 light = lightProj * vec4(worldPos, 1.0);
     vec3 p = light.xyz / light.w * 0.5 + 0.5;
-    
+
     if (any(lessThan(p, vec3(0))) || any(greaterThan(p, vec3(1)))) {
         return 1.0;
     }
@@ -45,7 +45,7 @@ float shadow(vec3 worldPos, vec3 n, mat4 lightProj, sampler2D shadowMap) {
         WORLD.SHADOW.SHADOW_BIAS_SCALE * (1.0 - dot(n, normalize(WORLD.SHADOW.SHADOW_LIGHT_DIR))),
         WORLD.SHADOW.SHADOW_BIAS_MIN
     );
-    
+
     vec2 texel = 1.0 / vec2(textureSize(shadowMap, 0));
     float sum = 0.0;
 
@@ -55,6 +55,6 @@ float shadow(vec3 worldPos, vec3 n, mat4 lightProj, sampler2D shadowMap) {
             sum += (p.z - bias <= sampleDepth) ? 1.0 : 0.0;
         }
     }
-    
+
     return sum / FILTER_SAMPLES;
 }

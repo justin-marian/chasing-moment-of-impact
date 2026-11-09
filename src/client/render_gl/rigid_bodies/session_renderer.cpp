@@ -88,14 +88,14 @@ void beginGpuTiming(Renderer::Impl& state) {
     if (state.frame >= TIMING_DELAY_FRAMES) {
         GLint ready = 0;
         glGetQueryObjectiv(state.queries[state.frame % 2], GL_QUERY_RESULT_AVAILABLE, &ready);
-        
+
         if (ready) {
             GLuint64 ns = 0;
             glGetQueryObjectui64v(state.queries[state.frame % 2], GL_QUERY_RESULT, &ns);
             state.render_ms = double(ns) * NANOSECONDS_TO_MILLISECONDS;
         }
     }
-    
+
     glBeginQuery(GL_TIME_ELAPSED, state.queries[state.frame % 2]);
 }
 
@@ -187,7 +187,7 @@ void Renderer::beginUi() {
 void Renderer::endUi() {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    
+
     auto error = glGetError();
     if (error != GL_NO_ERROR) {
         throw std::runtime_error("OpenGL UI error: " + std::to_string(error));
@@ -215,10 +215,10 @@ void Renderer::draw(const sim::State& s, const sim::WorldConfig& c, float yaw, f
 
     int width = 0, height = 0;
     int logicalWidth = 0, logicalHeight = 0;
-    
+
     glfwGetFramebufferSize(impl->window, &width, &height);
     glfwGetWindowSize(impl->window, &logicalWidth, &logicalHeight);
-    
+
     if (height == 0 || logicalHeight == 0) {
         return;
     }
@@ -239,18 +239,18 @@ void Renderer::draw(const sim::State& s, const sim::WorldConfig& c, float yaw, f
     passes::drawBackground(*impl, height);
 
     glm::vec3 eye(
-        distance * std::cos(pitch) * std::sin(yaw), 
+        distance * std::cos(pitch) * std::sin(yaw),
         distance * std::sin(pitch),
         distance * std::cos(pitch) * std::cos(yaw)
     );
-    
+
     auto camera = glm::perspective(
-        glm::radians(CAMERA_FOV_DEGREES), 
-        float(canvasWidth) / float(height), 
-        CAMERA_NEAR_PLANE, 
+        glm::radians(CAMERA_FOV_DEGREES),
+        float(canvasWidth) / float(height),
+        CAMERA_NEAR_PLANE,
         CAMERA_FAR_PLANE
     ) * glm::lookAt(eye, glm::vec3(0), glm::vec3(0, 1, 0));
-    
+
     glm::vec3 halfExtents(c.boxHalfExtents_m.x, c.boxHalfExtents_m.y, c.boxHalfExtents_m.z);
 
     passes::drawFloor(*impl, camera, halfExtents);
@@ -269,7 +269,7 @@ void Renderer::draw(const sim::State& s, const sim::WorldConfig& c, float yaw, f
     ++impl->frame;
 
     glViewport(0, 0, width, height);
-    
+
     auto error = glGetError();
     if (error != GL_NO_ERROR) {
         throw std::runtime_error("OpenGL error: " + std::to_string(error));
@@ -320,24 +320,24 @@ void Renderer::capture(const std::filesystem::path& path) {
     if (path.extension() != ".png") {
         throw std::runtime_error("Capture path must end in .png");
     }
-    
+
     if (!path.parent_path().empty()) {
         std::filesystem::create_directories(path.parent_path());
     }
 
     int width = 0, height = 0;
     glfwGetFramebufferSize(impl->window, &width, &height);
-    
+
     const std::size_t stride = std::size_t(width) * CHANNELS;
     std::vector<unsigned char> pixels(stride * std::size_t(height));
-    
+
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 
     /* OpenGL rows start at the bottom; PNG rows start at the top. Only row order changes. */
     for (int row = 0; row < height / 2; ++row) {
         std::swap_ranges(
-            pixels.begin() + std::size_t(row) * stride, 
+            pixels.begin() + std::size_t(row) * stride,
             pixels.begin() + std::size_t(row + 1) * stride,
             pixels.begin() + std::size_t(height - row - 1) * stride
         );
@@ -347,11 +347,11 @@ void Renderer::capture(const std::filesystem::path& path) {
     if (!output) {
         throw std::runtime_error("Cannot write screenshot");
     }
-    
+
     const auto write = [](void* context, void* data, int bytes) {
         static_cast<std::ofstream*>(context)->write(static_cast<const char*>(data), bytes);
     };
-    
+
     if (!stbi_write_png_to_func(write, &output, width, height, int(CHANNELS), pixels.data(), int(stride)) || !output) {
         throw std::runtime_error("Cannot encode PNG screenshot");
     }
@@ -375,7 +375,7 @@ namespace {
  */
 void releaseGlObjects(Renderer::Impl& impl) {
     impl.plane.reset();
-    
+
     for (auto& mesh : impl.meshes) {
         mesh.reset();
     }
@@ -408,7 +408,7 @@ Renderer::Impl::~Impl() {
     /* The GL context must be current for every subsequent GL call, including ImGui's own shutdown. */
     glfwMakeContextCurrent(window);
 
-    /* 
+    /*
      * Shut down ImGui. The OpenGL3 and GLFW backends free the GL objects ImGui
      * created (fonts, VAOs, shaders); run before releaseGlObjects so each object
      * is freed by the code that created it, and before the window/context are
@@ -425,7 +425,7 @@ Renderer::Impl::~Impl() {
 
     /* Release our own GL objects. Safe now: context is current and ImGui is no longer touching any GL state. */
     releaseGlObjects(*this);
-    
+
     /* Tear down the window and GLFW. No GL call may run after this. */
     glfwDestroyWindow(window);
     glfwTerminate();
